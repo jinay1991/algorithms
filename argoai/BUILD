@@ -19,3 +19,8 @@ cc_library(
     srcs = ["calculator.cpp"],
     hdrs = ["calculator.h"],
 )
+
+cc_library(
+    name = "shared_ptr",
+    hdrs = ["shared_ptr.h"],
+)

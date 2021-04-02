@@ -31,29 +31,6 @@ struct Node
 ///        If a node has no right sibling, the second element of its pair should be null
 std::vector<std::pair<const Node*, const Node*>> find_right_siblings(const Node& root);
 
-/// @brief Stream operator to sprint a pair of node pointers as specified
-constexpr std::ostream& operator<<(std::ostream& stream, const std::pair<const Node*, const Node*>& pair) noexcept
-{
-    if (pair.first != nullptr)
-    {
-        stream << pair.first->id;
-    }
-    else
-    {
-        stream << "None";
-    }
-    std::cout << " -> ";
-    if (pair.second != nullptr)
-    {
-        stream << pair.second->id;
-    }
-    else
-    {
-        stream << "None";
-    }
-    return stream;
-}
-
 }  // namespace argoai
 
 #endif  /// ARGOAI_FIND_RIGHT_SIBLING_H

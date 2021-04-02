@@ -16,7 +16,7 @@ namespace argoai
 /// If a node has no right sibling, the second element of its pair should be null
 std::vector<std::pair<const Node*, const Node*>> find_right_siblings(const Node& root)
 {
-    std::vector<std::pair<const Node*, const Node*>> result;
+    std::vector<std::pair<const Node*, const Node*>> right_siblings;
     std::queue<const Node*> node_queue;
 
     node_queue.push(&root);
@@ -24,7 +24,6 @@ std::vector<std::pair<const Node*, const Node*>> find_right_siblings(const Node&
     while (!node_queue.empty())
     {
         const Node* node = node_queue.front();
-        std::cout << node->id << " ";
         node_queue.pop();
 
         if (node->left != nullptr)
@@ -35,9 +34,18 @@ std::vector<std::pair<const Node*, const Node*>> find_right_siblings(const Node&
         {
             node_queue.push(node->right);
         }
-    }
-    std::cout << std::endl;
 
-    return result;
+        if (!node_queue.empty())
+        {
+            const Node* right_node = node_queue.front();
+            node_queue.pop();
+            right_siblings.push_back(std::make_pair(node, right_node));
+        }
+        else
+        {
+            right_siblings.push_back(std::make_pair(node, nullptr));
+        }
+    }
+    return right_siblings;
 }
 }  // namespace argoai

@@ -71,30 +71,54 @@ class FindRightSiblingFixture : public ::testing::Test
     }
 };
 
-// Find the "right siblings" in a binary tree.
-// For example, this tree:
-//             0
-//            / \
-//           1   5
-//          /   / \
-//         2   6   9
-//        /   / \   \
-//       3   7   8   10
-//      /             \
-//     4               11
-// Expected Output:
-// 0 -> None
-// 1 -> 5
-// 2 -> 6
-// 3 -> 7
-// 4 -> 11
-// 5 -> None
-// 6 -> 9
-// 7 -> 8
-// 8 -> 10
-// 9 -> None
-// 10 -> None
-// 11 -> None
+/// @brief Stream operator to sprint a pair of node pointers as specified
+inline std::ostream& operator<<(std::ostream& stream, const std::pair<const Node*, const Node*>& pair) noexcept
+{
+    if (pair.first != nullptr)
+    {
+        stream << pair.first->id;
+    }
+    else
+    {
+        stream << "None";
+    }
+    std::cout << " -> ";
+    if (pair.second != nullptr)
+    {
+        stream << pair.second->id;
+    }
+    else
+    {
+        stream << "None";
+    }
+    return stream;
+}
+
+/** Find the "right siblings" in a binary tree.
+ *  For example, this tree:
+ *              0
+ *             / \
+ *            1   5
+ *           /   / \
+ *          2   6   9
+ *         /   / \   \
+ *        3   7   8   10
+ *       /             \
+ *      4               11
+ *  Expected Output:
+ *  0 -> None
+ *  1 -> 5
+ *  2 -> 6
+ *  3 -> 7
+ *  4 -> 11
+ *  5 -> None
+ *  6 -> 9
+ *  7 -> 8
+ *  8 -> 10
+ *  9 -> None
+ *  10 -> None
+ *  11 -> None
+ */
 TEST_F(FindRightSiblingFixture, GivenTypicalTestTree_ExpectRightSiblings)
 {
     // Given
