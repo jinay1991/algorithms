@@ -12,40 +12,65 @@
 namespace argoai
 {
 
+inline std::ostream& operator<<(std::ostream& stream, const Node* node) noexcept
+{
+    if (node)
+    {
+        stream << node->id;
+    }
+    else
+    {
+        stream << "nullptr";
+    }
+    return stream;
+}
+
 /// @brief Given the root of a binary tree, return all of the right-sibling pairs.
 /// If a node has no right sibling, the second element of its pair should be null
 std::vector<std::pair<const Node*, const Node*>> find_right_siblings(const Node& root)
 {
-    std::vector<std::pair<const Node*, const Node*>> right_siblings;
-    std::queue<const Node*> node_queue;
+    std::vector<std::vector<const Node*>> siblings;
+    std::vector<const Node*> level_siblings;
+    std::queue<const Node*> queue;
+    queue.push(&root);
+    queue.push(nullptr);
 
-    node_queue.push(&root);
+    level_siblings.push_back(&root);
+    siblings.push_back(level_siblings);
+    level_siblings.clear();
 
-    while (!node_queue.empty())
+    while (queue.size() > 1)
     {
-        const Node* node = node_queue.front();
-        node_queue.pop();
+        const Node* node = queue.front();
+        queue.pop();
 
-        if (node->left != nullptr)
+        if (node == nullptr)
         {
-            node_queue.push(node->left);
-        }
-        if (node->right != nullptr)
-        {
-            node_queue.push(node->right);
+            queue.push(nullptr);
+            siblings.push_back(level_siblings);
+            level_siblings.clear();
+            continue;
         }
 
-        if (!node_queue.empty())
+        if (node->left)
         {
-            const Node* right_node = node_queue.front();
-            node_queue.pop();
-            right_siblings.push_back(std::make_pair(node, right_node));
+            queue.push(node->left);
+            level_siblings.push_back(node->left);
         }
-        else
+        if (node->right)
         {
-            right_siblings.push_back(std::make_pair(node, nullptr));
+            queue.push(node->right);
+            level_siblings.push_back(node->right);
         }
     }
-    return right_siblings;
+    for (const auto& level_sibling : siblings)
+    {
+        for (const auto& node : level_sibling)
+        {
+            std::cout << node << " ";
+        }
+        std::cout << std::endl;
+    }
+    return std::vector<std::pair<const Node*, const Node*>>{};
 }
 }  // namespace argoai
