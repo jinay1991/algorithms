@@ -7,6 +7,8 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include <vector>
+
 namespace datatypes
 {
 namespace
@@ -27,18 +29,27 @@ TEST(Tree, Insert_GivenSingleValue_ExpectInsertedValue)
     EXPECT_TRUE(tree.Contains(value));
 }
 
-TEST(Tree, Insert_GivenMultipleValues_ExpectInsertedValues)
+class TreeFixture : public ::testing::Test
+{
+};
+
+template <typename T>
+class TreeFixtureT : public TreeFixture, public ::testing::WithParamInterface<T>
+{
+};
+
+using TreeFixture_WithMultipleValues = TreeFixtureT<std::vector<std::int32_t>>;
+
+INSTANTIATE_TEST_SUITE_P(Tree, TreeFixture_WithMultipleValues, ::testing::Values(std::vector<std::int32_t>{2, 1, 3}));
+
+TEST_P(TreeFixture_WithMultipleValues, Insert_GivenMultipleValues_ExpectInsertedValues)
 {
     // Given
     Tree<std::int32_t> tree;
-    const std::int32_t value_1 = 1;
-    const std::int32_t value_2 = 2;
-    const std::int32_t value_3 = 3;
+    const auto list = GetParam();
 
     // When
-    tree.Insert(value_1);
-    tree.Insert(value_2);
-    tree.Insert(value_3);
+    tree.Insert(list);
 
     std::cout << tree << std::endl;
     // Then

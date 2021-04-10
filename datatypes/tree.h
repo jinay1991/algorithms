@@ -48,7 +48,7 @@ class Node
     constexpr void SetValue(const T& value) { value_ = value; }
     constexpr void SetParentNode(Node* parent) { parent_ = parent; }
     constexpr void SetLeftNode(Node* left) { left_ = left; }
-    constexpr void SetRightNode(Node* right) { left_ = right; }
+    constexpr void SetRightNode(Node* right) { right_ = right; }
 
     constexpr const T& GetValue() const { return value_; }
     constexpr Node* GetParentNode() const { return parent_; }
@@ -74,22 +74,27 @@ template <typename T>
 class Tree
 {
   public:
-    constexpr Tree() : root_{}, size_{0U}, width_{0U}, height_{0U} {}
+    constexpr Tree() : root_{nullptr}, size_{0U}, width_{0U}, height_{0U} {}
     ~Tree() = default;
+
+    constexpr void Insert(const std::vector<std::int32_t>& list)
+    {
+        for (const auto& value : list)
+        {
+            Insert(value);
+        }
+    }
 
     constexpr void Insert(const T& value)
     {
         Node<T>* new_node = CreateNode(value);
         if (!IsRootNodeExist())
         {
-            root_.SetValue(value);
-            size_++;
-            width_++;
-            height_++;
+            root_ = new_node;
         }
         else
         {
-            Node<T>* node = &root_;
+            Node<T>* node = root_;
             while (node)
             {
                 if (node->GetValue() < value)
@@ -102,7 +107,7 @@ class Tree
                     }
                     node = node->GetLeftNode();
                 }
-                else
+                if (node->GetValue() > value)
                 {
                     if (!node->HasRightNode())
                     {
@@ -124,7 +129,7 @@ class Tree
     constexpr std::size_t GetHeight() const { return height_; }
     constexpr bool Contains(const T& value) const { return true; }
 
-    std::string ToString() const { return ToString(&root_); }
+    std::string ToString() const { return ToString(root_); }
 
   private:
     constexpr Node<T>* CreateNode(const T& value)
@@ -134,7 +139,7 @@ class Tree
         width_++;
         return (new Node<T>{value});
     }
-    constexpr bool IsRootNodeExist() const { return root_.IsRootNode(); }
+    constexpr bool IsRootNodeExist() const { return (root_ != nullptr); }
 
     std::string ToString(const Node<T>* node, const std::string prefix = "", const bool is_left = false) const
     {
@@ -153,7 +158,7 @@ class Tree
         return stream.str();
     }
 
-    Node<T> root_;
+    Node<T>* root_;
     std::size_t size_;
     std::size_t width_;
     std::size_t height_;
