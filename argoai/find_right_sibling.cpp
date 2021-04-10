@@ -11,20 +11,6 @@
 
 namespace argoai
 {
-
-inline std::ostream& operator<<(std::ostream& stream, const Node* node) noexcept
-{
-    if (node)
-    {
-        stream << node->id;
-    }
-    else
-    {
-        stream << "nullptr";
-    }
-    return stream;
-}
-
 /// @brief Given the root of a binary tree, return all of the right-sibling pairs.
 /// If a node has no right sibling, the second element of its pair should be null
 std::vector<std::pair<const Node*, const Node*>> find_right_siblings(const Node& root)

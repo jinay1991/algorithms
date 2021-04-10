@@ -74,7 +74,7 @@ template <typename T>
 class Tree
 {
   public:
-    constexpr Tree() : root_{nullptr}, size_{0U}, width_{0U}, height_{0U} {}
+    constexpr Tree() : root_{nullptr}, size_{0U} {}
     ~Tree() = default;
 
     constexpr void Insert(const std::vector<std::int32_t>& list)
@@ -107,7 +107,7 @@ class Tree
                     }
                     node = node->GetLeftNode();
                 }
-                if (node->GetValue() > value)
+                else if (node->GetValue() > value)
                 {
                     if (!node->HasRightNode())
                     {
@@ -117,6 +117,10 @@ class Tree
                     }
                     node = node->GetRightNode();
                 }
+                else
+                {
+                    break;
+                }
             }
         }
     }
@@ -125,9 +129,6 @@ class Tree
     constexpr void Search(const T& value) {}
 
     constexpr std::size_t GetSize() const { return size_; }
-    constexpr std::size_t GetWidth() const { return width_; }
-    constexpr std::size_t GetHeight() const { return height_; }
-    constexpr bool Contains(const T& value) const { return true; }
 
     std::string ToString() const { return ToString(root_); }
 
@@ -135,8 +136,6 @@ class Tree
     constexpr Node<T>* CreateNode(const T& value)
     {
         size_++;
-        height_++;
-        width_++;
         return (new Node<T>{value});
     }
     constexpr bool IsRootNodeExist() const { return (root_ != nullptr); }
@@ -160,8 +159,6 @@ class Tree
 
     Node<T>* root_;
     std::size_t size_;
-    std::size_t width_;
-    std::size_t height_;
 };
 
 template <typename T>

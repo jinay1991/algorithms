@@ -23,7 +23,8 @@ int find_max_rides(std::vector<std::vector<int>> requests)
     {
         std::cout << ride[0] << ", " << ride[1] << std::endl;
     }
-    for (auto& ride : requests)
+
+    for (const auto& ride : requests)
     {
         const auto trip_duration = ride[0];
         const auto deadline = ride[1];

@@ -19,19 +19,7 @@ class FindMaxRidesFixture : public ::testing::Test
   protected:
     inline std::vector<std::vector<int>> GenerateTestRequests() const
     {
-        std::vector<std::vector<int>> requests;
-        {
-            std::vector<int> ride;
-            ride.push_back(2);
-            ride.push_back(7);
-            requests.push_back(ride);
-        }
-        {
-            std::vector<int> ride;
-            ride.push_back(5);
-            ride.push_back(5);
-            requests.push_back(ride);
-        }
+        std::vector<std::vector<int>> requests{{2, 7}, {5, 5}};
         return requests;
     }
 };

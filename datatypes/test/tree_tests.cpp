@@ -24,9 +24,6 @@ TEST(Tree, Insert_GivenSingleValue_ExpectInsertedValue)
 
     // Then
     EXPECT_EQ(tree.GetSize(), 1U);
-    EXPECT_EQ(tree.GetHeight(), 1U);
-    EXPECT_EQ(tree.GetWidth(), 1U);
-    EXPECT_TRUE(tree.Contains(value));
 }
 
 class TreeFixture : public ::testing::Test
@@ -40,7 +37,11 @@ class TreeFixtureT : public TreeFixture, public ::testing::WithParamInterface<T>
 
 using TreeFixture_WithMultipleValues = TreeFixtureT<std::vector<std::int32_t>>;
 
-INSTANTIATE_TEST_SUITE_P(Tree, TreeFixture_WithMultipleValues, ::testing::Values(std::vector<std::int32_t>{2, 1, 3}));
+INSTANTIATE_TEST_SUITE_P(Tree,
+                         TreeFixture_WithMultipleValues,
+                         ::testing::Values(std::vector<std::int32_t>{2, 1, 3},
+                                           std::vector<std::int32_t>{2, 1, 3, 5, 6},
+                                           std::vector<std::int32_t>{2, 1}));
 
 TEST_P(TreeFixture_WithMultipleValues, Insert_GivenMultipleValues_ExpectInsertedValues)
 {
@@ -51,9 +52,8 @@ TEST_P(TreeFixture_WithMultipleValues, Insert_GivenMultipleValues_ExpectInserted
     // When
     tree.Insert(list);
 
-    std::cout << tree << std::endl;
     // Then
-    EXPECT_EQ(tree.GetSize(), 3U);
+    EXPECT_EQ(tree.GetSize(), list.size());
 }
 }  // namespace
 }  // namespace datatypes
