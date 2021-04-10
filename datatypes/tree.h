@@ -77,6 +77,13 @@ class Tree
     constexpr Tree() : root_{nullptr}, size_{0U} {}
     ~Tree() = default;
 
+    constexpr void AllocateNode(const T& value,
+                                const Node* parent,
+                                const Node* left = nullptr,
+                                const Node* right = nullptr)
+    {
+    }
+
     constexpr void Insert(const std::vector<std::int32_t>& list)
     {
         for (const auto& value : list)
