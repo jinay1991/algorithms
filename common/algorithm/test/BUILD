@@ -4,7 +4,7 @@ cc_test(
     name = "unit_tests",
     srcs = ["tree_tests.cpp"],
     deps = [
-        "//datatypes:tree",
+        "//common/algorithm:tree",
         "@googletest//:gtest_main",
     ],
 )

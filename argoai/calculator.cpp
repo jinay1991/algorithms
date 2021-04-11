@@ -9,6 +9,7 @@
 #include <sstream>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace argoai
 {
@@ -20,6 +21,10 @@ const std::unordered_map<char, std::function<double(double, double)>> operations
     {'-', [](const double a, const double b) -> double { return (a - b); }},
     {'*', [](const double a, const double b) -> double { return (a * b); }},
     {'/', [](const double a, const double b) -> double { return (b != kEpsilon) ? (a / b) : kInfinity; }}};
+
+namespace
+{
+}  // namespace
 
 double calculate(const std::string& input)
 {
@@ -47,5 +52,75 @@ double calculate(const std::string& input)
     }
     return result;
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+class Node
+{
+  public:
+    constexpr Node() : value_{}, parent_{nullptr}, left_{nullptr}, right_{nullptr} {}
+
+    constexpr explicit Node(const T& value,
+                            Node* parent = nullptr,
+                            Node* left = nullptr,
+                            Node* right = nullptr) noexcept
+        : value_{value}, parent_{parent}, left_{left}, right_{right}
+    {
+    }
+
+    constexpr explicit Node(const Node& other) noexcept
+        : value_{other.value_}, parent_{other.parent_}, left_{other.left_}, right_{other.right_}
+    {
+    }
+
+    constexpr Node& operator=(const Node& other) noexcept
+    {
+        value_ = other.GetValue();
+        parent_ = other.GetParentNode();
+        left_ = other.GetLeftNode();
+        right_ = other.GetRightNode();
+    }
+
+    constexpr explicit Node(Node&& other) = delete;
+    constexpr Node& operator=(Node&& other) = delete;
+
+    constexpr void SetValue(const T& value) { value_ = value; }
+    constexpr void SetParentNode(Node* parent) { parent_ = parent; }
+    constexpr void SetLeftNode(Node* left) { left_ = left; }
+    constexpr void SetRightNode(Node* right) { right_ = right; }
+
+    constexpr const T& GetValue() const { return value_; }
+    constexpr Node* GetParentNode() const { return parent_; }
+    constexpr Node* GetLeftNode() const { return left_; }
+    constexpr Node* GetRightNode() const { return right_; }
+
+    constexpr bool HasParentNode() const { return (parent_ != nullptr); }
+    constexpr bool HasLeftNode() const { return (left_ != nullptr); }
+    constexpr bool HasRightNode() const { return (right_ != nullptr); }
+
+    constexpr bool IsRootNode() const { return (!HasParentNode()); }
+
+  private:
+    T value_;
+
+    Node* parent_;
+    Node* left_;
+    Node* right_;
+};
+
+template <typename T>
+class Tree
+{
+  public:
+    Tree() : root_{nullptr} {}
+
+    explicit Tree(const Node<T>* root) : root_{root} {}
+
+    void Insert(const T& value) {}
+
+  private:
+    std::string expression_;
+    Node<T>* root_;
+};
 
 }  // namespace argoai

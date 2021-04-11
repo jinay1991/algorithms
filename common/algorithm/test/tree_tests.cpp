@@ -2,14 +2,14 @@
 /// @file
 /// @copyright Copyright (C) 2021. MIT License.
 ///
-#include "datatypes/tree.h"
+#include "common/algorithm/tree.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <vector>
 
-namespace datatypes
+namespace algorithm
 {
 namespace
 {
@@ -41,6 +41,7 @@ INSTANTIATE_TEST_SUITE_P(Tree,
                          TreeFixture_WithMultipleValues,
                          ::testing::Values(std::vector<std::int32_t>{2, 1, 3},
                                            std::vector<std::int32_t>{2, 1, 3, 5, 6},
+                                           std::vector<std::int32_t>{10, -5, 16, -8, 7, 18},
                                            std::vector<std::int32_t>{2, 1}));
 
 TEST_P(TreeFixture_WithMultipleValues, Insert_GivenMultipleValues_ExpectInsertedValues)
@@ -55,5 +56,6 @@ TEST_P(TreeFixture_WithMultipleValues, Insert_GivenMultipleValues_ExpectInserted
     // Then
     EXPECT_EQ(tree.GetSize(), list.size());
 }
+
 }  // namespace
-}  // namespace datatypes
+}  // namespace algorithm
