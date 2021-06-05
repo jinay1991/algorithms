@@ -6,9 +6,8 @@
 #define COMMON_ALGORITHM_TREE_H
 
 #include <algorithm>
-#include <array>
 #include <cstdint>
-#include <iostream>
+#include <ostream>
 #include <sstream>
 #include <string>
 #include <vector>
