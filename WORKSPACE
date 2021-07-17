@@ -1,3 +1,5 @@
-load("@//third_party:dependencies.bzl", "third_party_dependencies")
+workspace(name = "algorithms")
 
-third_party_dependencies()
+load("@algorithms//third_party:dependencies.bzl", "algorithms_dependencies")
+
+algorithms_dependencies()
