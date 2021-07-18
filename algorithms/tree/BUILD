@@ -1,5 +1,5 @@
 cc_library(
     name = "tree",
-    hdrs = ["binary_tree.h"],
+    hdrs = ["max_heap.h"],
     visibility = ["//visibility:public"],
 )
