@@ -73,9 +73,6 @@ class MaxHeap
         return largest_node_value;
     }
 
-    constexpr value_type Front() const { return GetNodeValue(kRootIndex); }
-    constexpr value_type Back() const { return GetNodeValue(GetCurrentNodeIndex()); }
-
     constexpr void Reset()
     {
         buffer_.fill(value_type{});
