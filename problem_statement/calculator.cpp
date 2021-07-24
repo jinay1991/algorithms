@@ -4,123 +4,161 @@
 ///
 #include "problem_statement/calculator.h"
 
-#include <functional>
-#include <limits>
-#include <sstream>
+#include <stack>
 #include <string>
-#include <unordered_map>
-#include <vector>
 
 namespace problem_statement
 {
-constexpr double kEpsilon = std::numeric_limits<double>::epsilon();
-constexpr double kInfinity = std::numeric_limits<double>::infinity();
-
-const std::unordered_map<char, std::function<double(double, double)>> operations{
-    {'+', [](const double a, const double b) -> double { return (a + b); }},
-    {'-', [](const double a, const double b) -> double { return (a - b); }},
-    {'*', [](const double a, const double b) -> double { return (a * b); }},
-    {'/', [](const double a, const double b) -> double { return (b != kEpsilon) ? (a / b) : kInfinity; }}};
-
 namespace
 {
-}  // namespace
+constexpr std::int32_t GetOperatorPrecedence(const char op)
+{
+    std::int32_t precedence = 0;
+    switch (op)
+    {
+        case '^':
+        {
+            precedence = 3;
+            break;
+        }
+        case '*':
+        case '/':
+        {
+            precedence = 2;
+            break;
+        }
+        case '+':
+        case '-':
+        {
+            precedence = 1;
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+    return precedence;
+}
 
-double calculate(const std::string& input)
+constexpr double Evaluate(const double value_1, const double value_2, const char op)
 {
     double result = 0.0;
-    std::istringstream stream{input};
-    char ch = 0;
-    while (stream.get(ch))
+    switch (op)
     {
-        double value_1 = 0.0;
-        double value_2 = 0.0;
-        char op = 0;
-        if (ch >= '0' && ch <= '9')
+        case '*':
         {
-            stream >> value_1 >> op >> value_2;
+            result = value_1 * value_2;
+            break;
         }
-        else
+        case '/':
         {
-            continue;
+            result = value_1 / value_2;
+            break;
         }
-
-        if (operations.find(op) != operations.end())
+        case '+':
         {
-            result = operations.at(op)(value_1, value_2);
+            result = value_1 + value_2;
+            break;
+        }
+        case '-':
+        {
+            result = value_1 - value_2;
+            break;
+        }
+        default:
+        {
+            break;
         }
     }
     return result;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+}  // namespace
 
-template <typename T>
-class Node
+double calculate(const std::string& expression)
 {
-  public:
-    constexpr Node() : value_{}, parent_{nullptr}, left_{nullptr}, right_{nullptr} {}
-
-    constexpr explicit Node(const T& value,
-                            Node* parent = nullptr,
-                            Node* left = nullptr,
-                            Node* right = nullptr) noexcept
-        : value_{value}, parent_{parent}, left_{left}, right_{right}
+    std::stack<double> operand_stack{};
+    std::stack<char> operator_stack{};
+    for (auto i = 0; i < expression.length(); ++i)
     {
-    }
+        if (expression[i] == ' ')
+        {
+            continue;
+        }
+        else if (expression[i] == '(')
+        {
+            operator_stack.push(expression[i]);
+        }
+        else if (std::isdigit(expression[i]))
+        {
+            double value = 0.0;
+            while (std::isdigit(expression[i]) && i < expression.length())
+            {
+                value = (value * 10.0) + static_cast<double>(expression[i] - '0');
+                i++;
+            }
 
-    constexpr explicit Node(const Node& other) noexcept
-        : value_{other.value_}, parent_{other.parent_}, left_{other.left_}, right_{other.right_}
+            operand_stack.push(value);
+            i--;
+        }
+        else if (expression[i] == ')')
+        {
+            while (!operator_stack.empty() && operator_stack.top() != '(')
+            {
+                const double value_2 = operand_stack.top();
+                operand_stack.pop();
+
+                const double value_1 = operand_stack.top();
+                operand_stack.pop();
+
+                const char op = operator_stack.top();
+                operator_stack.pop();
+
+                const double result = Evaluate(value_1, value_2, op);
+                operand_stack.push(result);
+            }
+
+            if (!operator_stack.empty())
+            {
+                operator_stack.pop();
+            }
+        }
+        else
+        {
+            while (!operator_stack.empty() &&
+                   GetOperatorPrecedence(operator_stack.top()) >= GetOperatorPrecedence(expression[i]))
+            {
+                const double value_2 = operand_stack.top();
+                operand_stack.pop();
+
+                const double value_1 = operand_stack.top();
+                operand_stack.pop();
+
+                const char op = operator_stack.top();
+                operator_stack.pop();
+
+                const double result = Evaluate(value_1, value_2, op);
+                operand_stack.push(result);
+            }
+
+            operator_stack.push(expression[i]);
+        }
+    }
+    while (!operator_stack.empty())
     {
+        const double value_2 = operand_stack.top();
+        operand_stack.pop();
+
+        const double value_1 = operand_stack.top();
+        operand_stack.pop();
+
+        const char op = operator_stack.top();
+        operator_stack.pop();
+
+        const double result = Evaluate(value_1, value_2, op);
+        operand_stack.push(result);
     }
-
-    constexpr Node& operator=(const Node& other) noexcept
-    {
-        value_ = other.GetValue();
-        parent_ = other.GetParentNode();
-        left_ = other.GetLeftNode();
-        right_ = other.GetRightNode();
-    }
-
-    constexpr explicit Node(Node&& other) = delete;
-    constexpr Node& operator=(Node&& other) = delete;
-
-    constexpr void SetValue(const T& value) { value_ = value; }
-    constexpr void SetParentNode(Node* parent) { parent_ = parent; }
-    constexpr void SetLeftNode(Node* left) { left_ = left; }
-    constexpr void SetRightNode(Node* right) { right_ = right; }
-
-    constexpr const T& GetValue() const { return value_; }
-    constexpr Node* GetParentNode() const { return parent_; }
-    constexpr Node* GetLeftNode() const { return left_; }
-    constexpr Node* GetRightNode() const { return right_; }
-
-    constexpr bool HasParentNode() const { return (parent_ != nullptr); }
-    constexpr bool HasLeftNode() const { return (left_ != nullptr); }
-    constexpr bool HasRightNode() const { return (right_ != nullptr); }
-
-    constexpr bool IsRootNode() const { return (!HasParentNode()); }
-
-  private:
-    T value_;
-
-    Node* parent_;
-    Node* left_;
-    Node* right_;
-};
-
-template <typename T>
-class Tree
-{
-  public:
-    Tree() : root_{nullptr} {}
-
-    explicit Tree(const Node<T>* root) : root_{root} {}
-
-    void Insert(const T& value) {}
-
-  private:
-    std::string expression_;
-    Node<T>* root_;
-};
+    return operand_stack.top();
+}
 
 }  // namespace problem_statement
