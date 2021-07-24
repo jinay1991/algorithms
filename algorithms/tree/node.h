@@ -17,7 +17,7 @@ class Node
   public:
     using value_type = T;
 
-    explicit Node(const char data, Node* left, Node* right) : data_{data}, left_{left}, right_{right} {}
+    explicit Node(const value_type data, Node* left, Node* right) : data_{data}, left_{left}, right_{right} {}
 
     std::string Inorder() const { return Inorder(this); }
     std::string Preorder() const { return Preorder(this); }

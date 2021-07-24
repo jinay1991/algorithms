@@ -24,6 +24,7 @@ struct TestStringParam
     std::string infix_expression;
     std::string prefix_expression;
     std::string postfix_expression;
+    double result;
 };
 
 using ExpressionTreeFixture_WithString = ExpressionTreeFixtureT<TestStringParam>;
@@ -33,9 +34,9 @@ INSTANTIATE_TEST_SUITE_P(
     ExpressionTree,
     ExpressionTreeFixture_WithString,
     ::testing::Values(
-        //              expression                    , (expected) infix_expression         , (expected) prefix_expression         , (expected) postfix_expression
-        TestStringParam{"1+2+4*7"                     , "1 + 2 + 4 * 7 "                    , "+ + 1 2 * 4 7 "                    , "1 2 + 4 7 * + "                    },
-        TestStringParam{"(1^2^(3/4/5-6)^(7*8-9))"     , "1 ^ 2 ^ 3 / 4 / 5 - 6 ^ 7 * 8 - 9 ", "^ 1 ^ 2 ^ - / / 3 4 5 6 - * 7 8 9 ", "1 2 3 4 / 5 / 6 - 7 8 * 9 - ^ ^ ^ "}
+        //              expression                    , (expected) infix_expression         , (expected) prefix_expression         , (expected) postfix_expression      , (expected) result
+        TestStringParam{"1+2+4*7"                     , "1 + 2 + 4 * 7 "                    , "+ + 1 2 * 4 7 "                    , "1 2 + 4 7 * + "                    ,              31.0},
+        TestStringParam{"(1^2^(3/4/5-6)^(7*8-9))"     , "1 ^ 2 ^ 3 / 4 / 5 - 6 ^ 7 * 8 - 9 ", "^ 1 ^ 2 ^ - / / 3 4 5 6 - * 7 8 9 ", "1 2 3 4 / 5 / 6 - 7 8 * 9 - ^ ^ ^ ",               1.0}
 ));
 // clang-format on
 
@@ -52,6 +53,7 @@ TEST_P(ExpressionTreeFixture_WithString, GivenTypicalExpression_ExpectExpression
     EXPECT_EQ(unit.GetInfixExpression(), param.infix_expression);
     EXPECT_EQ(unit.GetPrefixExpression(), param.prefix_expression);
     EXPECT_EQ(unit.GetPostfixExpression(), param.postfix_expression);
+    EXPECT_EQ(unit.EvaluateExpression(), param.result);
 }
 }  // namespace
 }  // namespace tree
