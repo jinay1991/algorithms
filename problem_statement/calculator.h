@@ -2,17 +2,20 @@
 /// @file
 /// @copyright Copyright (C) 2021. MIT License.
 ///
-#ifndef ARGOAI_CALCULATOR_H
-#define ARGOAI_CALCULATOR_H
+#ifndef PROBLEM_STATEMENT_CALCULATOR_H
+#define PROBLEM_STATEMENT_CALCULATOR_H
 
 #include <string>
 
 namespace problem_statement
 {
-// input: string with input calculation
-// return: result of calculation
+
+/// @brief Evaluate result of given expression.
+///
+/// @param expression[in] - Expression to be evaluated
+/// @return Result of expression evaluation
 double calculate(const std::string& input);
 
 }  // namespace problem_statement
 
-#endif  /// ARGOAI_CALCULATOR_H
+#endif  /// PROBLEM_STATEMENT_CALCULATOR_H
