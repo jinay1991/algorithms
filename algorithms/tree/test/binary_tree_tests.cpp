@@ -4,6 +4,7 @@
 ///
 #include "algorithms/tree/binary_tree.h"
 
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <iostream>
@@ -31,18 +32,20 @@ TEST_F(TreeFixture, Insert_GivenTypicalNodes_ExpectUpdatedTree)
 
     // When
     unit.Insert(3);
-    unit.Insert(1);
     unit.Insert(2);
+    unit.Insert(1);
+    unit.Insert(5);
 
     // Then
-    EXPECT_EQ(unit.GetSize(), 3UL);
+    EXPECT_EQ(unit.GetSize(), 4UL);
     EXPECT_EQ(unit.GetCapacity(), kMaxNumberOfNodes);
-    EXPECT_EQ(unit.GetMaxDepth(), 2UL);
-    EXPECT_EQ(unit.GetMaxValue(), 3);
+    EXPECT_EQ(unit.GetMaxDepth(), 3UL);
+    EXPECT_EQ(unit.GetMaxValue(), 5);
     EXPECT_EQ(unit.GetMinValue(), 1);
-    EXPECT_TRUE(unit.IsBinarySearchTree());
-
-    std::cout << "PreOrder Traversal: " << unit.GetPreOrderTraversal() << std::endl;
+    EXPECT_FALSE(unit.IsBinarySearchTree());
+    EXPECT_THAT(unit.GetInOrderTraversal(), ::testing::ElementsAre(1, 2, 3, 5));
+    EXPECT_THAT(unit.GetPreOrderTraversal(), ::testing::ElementsAre(3, 1, 2, 5));
+    EXPECT_THAT(unit.GetPostOrderTraversal(), ::testing::ElementsAre(1, 2, 5, 3));
 }
 }  // namespace
 }  // namespace tree

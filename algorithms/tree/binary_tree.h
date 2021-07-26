@@ -8,14 +8,12 @@
 #include <algorithm>
 #include <array>
 #include <cstdint>
-#include <ostream>
-#include <sstream>
-#include <string>
+#include <list>
 
 namespace tree
 {
 
-template <typename T, std::size_t kMaxNumberOfNodes, bool kIsBinarySearchTree = false>
+template <typename T, std::size_t kMaxNumberOfNodes>
 class Tree
 {
   public:
@@ -23,6 +21,7 @@ class Tree
     using index_type = std::size_t;
     using size_type = std::size_t;
     using container = std::array<value_type, kMaxNumberOfNodes>;
+    using dynamic_container = std::list<value_type>;
 
     constexpr Tree() : invalid_value_{}, size_{0UL}, buffer_{} { buffer_.fill(invalid_value_); }
     constexpr explicit Tree(const value_type& invalid_value) : invalid_value_{invalid_value}, size_{0UL}, buffer_{}
@@ -34,14 +33,7 @@ class Tree
     {
         if (!IsFull())
         {
-            if (kIsBinarySearchTree)
-            {
-                InsertBST(GetRootIndex(), value);
-            }
-            else
-            {
-                InsertBT(GetRootIndex(), value);
-            }
+            InsertNode(GetRootIndex(), value);
         }
     }
 
@@ -62,14 +54,31 @@ class Tree
     constexpr size_type GetSize() const { return size_; }
     constexpr size_type GetCapacity() const { return buffer_.size(); }
 
-    std::string GetInOrderTraversal() const { return InOrder(GetRootIndex()); }
-    std::string GetPostOrderTraversal() const { return PostOrder(GetRootIndex()); }
-    std::string GetPreOrderTraversal() const { return PreOrder(GetRootIndex()); }
+    constexpr dynamic_container GetInOrderTraversal() const
+    {
+        dynamic_container list{};
+        InOrder(GetRootIndex(), list);
+        return list;
+    }
+    constexpr dynamic_container GetPostOrderTraversal() const
+    {
+        dynamic_container list{};
+        PostOrder(GetRootIndex(), list);
+        return list;
+    }
+    constexpr dynamic_container GetPreOrderTraversal() const
+    {
+        dynamic_container list{};
+        PreOrder(GetRootIndex(), list);
+        return list;
+    }
 
     constexpr size_type GetMaxDepth() const { return MaxDepth(GetRootIndex()); }
     constexpr size_type GetMinValue() const { return MinValue(GetRootIndex()); }
     constexpr size_type GetMaxValue() const { return MaxValue(GetRootIndex()); }
+
     constexpr bool IsBinarySearchTree() const { return IsBinarySearchTree(GetRootIndex()); }
+    constexpr bool IsMinimalTree() const { return true; }
 
   private:
     static constexpr index_type kRootIndex = 0UL;
@@ -83,18 +92,21 @@ class Tree
     constexpr bool IsEmpty() const { return (0UL == GetSize()); }
     constexpr bool IsFull() const { return (GetSize() >= GetCapacity()); }
 
-    constexpr bool IsIndexValid(const index_type index) const { return (index < GetSize()); }
-
-    constexpr bool HasLeftNode(const index_type index) const { return (GetLeftNodeIndex(index) < GetSize()); }
-    constexpr bool HasRightNode(const index_type index) const { return (GetRightNodeIndex(index) < GetSize()); }
+    constexpr bool IsRootNode(const index_type index) const { return (index == GetRootIndex()); }
+    constexpr bool IsNodeIndexValid(const index_type index) const { return (index < GetSize()); }
+    constexpr bool IsNodeValid(const index_type index) const { return (GetNodeValue(index) != GetInvalidValue()); }
+    constexpr bool HasLeftNode(const index_type index) const
+    {
+        return (IsNodeIndexValid(GetLeftNodeIndex(index)) && IsNodeValid(GetLeftNodeIndex(index)));
+    }
+    constexpr bool HasRightNode(const index_type index) const
+    {
+        return (IsNodeIndexValid(GetRightNodeIndex(index)) && IsNodeValid(GetRightNodeIndex(index)));
+    }
 
     constexpr value_type GetInvalidValue() const { return invalid_value_; }
 
     constexpr value_type GetNodeValue(const index_type index) const { return buffer_.at(index); }
-    constexpr value_type GetLeftNodeValue(const index_type index) const { return GetNodeValue(GetLeftNodeIndex()); }
-    constexpr value_type GetRightNodeValue(const index_type index) const { return GetNodeValue(GetRightNodeIndex()); }
-    constexpr index_type GetParentNodeValue(const index_type index) const { return GetNodeValue(GetParentNodeIndex()); }
-
     constexpr void SetNodeValue(const index_type index, const value_type& value) { buffer_.at(index) = value; }
     constexpr void SetLeftNodeValue(const index_type index, const value_type& value)
     {
@@ -105,88 +117,81 @@ class Tree
         SetNodeValue(GetRightNodeIndex(index), value);
     }
 
-    constexpr index_type InsertBST(const index_type index, const value_type value)
+    constexpr void InsertNode(const index_type index, const value_type value)
     {
         index_type current_index = index;
-        if (!IsIndexValid(current_index))
+        if (IsEmpty())
         {
             SetNodeValue(current_index, value);
-            size_++;
-            return current_index;
-        }
-
-        if (value > GetNodeValue(current_index))
-        {
-            current_index = InsertBST(GetRightNodeIndex(current_index), value);
-            SetRightNodeValue(current_index, value);
             size_++;
         }
         else
         {
-            current_index = InsertBST(GetLeftNodeIndex(current_index), value);
-            SetLeftNodeValue(current_index, value);
-            size_++;
-        }
-        return current_index;
-    }
-
-    constexpr index_type InsertBT(const index_type index, const value_type value)
-    {
-        index_type current_index = index;
-        while (IsIndexValid(current_index))
-        {
-            if (value > GetNodeValue(current_index))
+            while (IsNodeIndexValid(current_index))
             {
-                current_index = GetRightNodeIndex(current_index);
-            }
-            else
-            {
-                current_index = GetLeftNodeIndex(current_index);
+                if (value < GetNodeValue(current_index))
+                {
+                    if (HasLeftNode(current_index))
+                    {
+                        current_index = GetLeftNodeIndex(current_index);
+                    }
+                    else
+                    {
+                        SetLeftNodeValue(current_index, value);
+                        size_++;
+                        break;
+                    }
+                }
+                else
+                {
+                    if (HasRightNode(current_index))
+                    {
+                        current_index = GetRightNodeIndex(current_index);
+                    }
+                    else
+                    {
+                        SetRightNodeValue(current_index, value);
+                        size_++;
+                        break;
+                    }
+                }
             }
         }
 
-        SetNodeValue(current_index, value);
-        size_++;
-        return current_index;
+        return;
     }
 
-    std::string InOrder(const index_type index) const
+    constexpr void InOrder(const index_type index, dynamic_container& list) const
     {
-        std::stringstream stream;
-        if (IsIndexValid(index))
+        if (IsNodeIndexValid(index))
         {
-            stream << InOrder(GetLeftNodeIndex(index)) << ", ";
-            stream << GetNodeValue(index) << ", ";
-            stream << InOrder(GetRightNodeIndex(index)) << ", ";
+            InOrder(GetLeftNodeIndex(index), list);
+            list.push_back(GetNodeValue(index));
+            InOrder(GetRightNodeIndex(index), list);
         }
-        return stream.str();
     }
-    std::string PostOrder(const index_type index) const
+    constexpr void PostOrder(const index_type index, dynamic_container& list) const
     {
-        std::stringstream stream;
-        if (IsIndexValid(index))
+        if (IsNodeIndexValid(index))
         {
-            stream << PostOrder(GetLeftNodeIndex(index)) << ", ";
-            stream << PostOrder(GetRightNodeIndex(index)) << ", ";
-            stream << GetNodeValue(index) << ", ";
+            InOrder(GetLeftNodeIndex(index), list);
+            InOrder(GetRightNodeIndex(index), list);
+            list.push_back(GetNodeValue(index));
         }
-        return stream.str();
     }
-    std::string PreOrder(const index_type index) const
+    constexpr void PreOrder(const index_type index, dynamic_container& list) const
     {
-        std::stringstream stream;
-        if (IsIndexValid(index))
+        if (IsNodeIndexValid(index))
         {
-            stream << GetNodeValue(index) << ", ";
-            stream << PreOrder(GetLeftNodeIndex(index)) << ", ";
-            stream << PreOrder(GetRightNodeIndex(index)) << ", ";
+            list.push_back(GetNodeValue(index));
+            InOrder(GetLeftNodeIndex(index), list);
+            InOrder(GetRightNodeIndex(index), list);
         }
-        return stream.str();
     }
     constexpr size_type MaxDepth(const index_type index) const
     {
         size_type max_depth = 0UL;
-        if (IsIndexValid(index))
+        if (IsNodeIndexValid(index))
         {
             const size_type left_depth = MaxDepth(GetLeftNodeIndex(index));
             const size_type right_depth = MaxDepth(GetRightNodeIndex(index));
@@ -217,7 +222,7 @@ class Tree
     constexpr bool IsBinarySearchTree(const index_type index) const
     {
         bool is_binary_search_tree = true;
-        if (IsIndexValid(index))
+        if (IsNodeIndexValid(index))
         {
             if (GetLeftNodeIndex(index) && (MaxValue(GetLeftNodeIndex(index)) > GetNodeValue(index)))
             {
