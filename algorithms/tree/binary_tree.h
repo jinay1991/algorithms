@@ -9,11 +9,13 @@
 #include <array>
 #include <cstdint>
 #include <ostream>
+#include <sstream>
+#include <string>
 
 namespace tree
 {
 
-template <typename T, std::size_t kMaxNumberOfNodes, bool kIsBinarySearchTree = true>
+template <typename T, std::size_t kMaxNumberOfNodes, bool kIsBinarySearchTree = false>
 class Tree
 {
   public:
@@ -22,8 +24,11 @@ class Tree
     using size_type = std::size_t;
     using container = std::array<value_type, kMaxNumberOfNodes>;
 
-    constexpr Tree() : invalid_value_{}, size_{0UL}, buffer_{} {}
-    constexpr explicit Tree(const value_type& invalid_value) : invalid_value_{invalid_value}, size_{0UL}, buffer_{} {}
+    constexpr Tree() : invalid_value_{}, size_{0UL}, buffer_{} { buffer_.fill(invalid_value_); }
+    constexpr explicit Tree(const value_type& invalid_value) : invalid_value_{invalid_value}, size_{0UL}, buffer_{}
+    {
+        buffer_.fill(invalid_value_);
+    }
 
     constexpr void Insert(const value_type& value)
     {
@@ -57,9 +62,10 @@ class Tree
     constexpr size_type GetSize() const { return size_; }
     constexpr size_type GetCapacity() const { return buffer_.size(); }
 
-    constexpr container GetInOrderTraversal() const { return InOrder(GetRootIndex()); }
-    constexpr container GetPostOrderTraversal() const { return PostOrder(GetRootIndex()); }
-    constexpr container GetPreOrderTraversal() const { return PreOrder(GetRootIndex()); }
+    std::string GetInOrderTraversal() const { return InOrder(GetRootIndex()); }
+    std::string GetPostOrderTraversal() const { return PostOrder(GetRootIndex()); }
+    std::string GetPreOrderTraversal() const { return PreOrder(GetRootIndex()); }
+
     constexpr size_type GetMaxDepth() const { return MaxDepth(GetRootIndex()); }
     constexpr size_type GetMinValue() const { return MinValue(GetRootIndex()); }
     constexpr size_type GetMaxValue() const { return MaxValue(GetRootIndex()); }
@@ -126,13 +132,57 @@ class Tree
 
     constexpr index_type InsertBT(const index_type index, const value_type value)
     {
-        /// @todo: Add algorithm for inserting to Binary Tree..
-        return index_type{};
+        index_type current_index = index;
+        while (IsIndexValid(current_index))
+        {
+            if (value > GetNodeValue(current_index))
+            {
+                current_index = GetRightNodeIndex(current_index);
+            }
+            else
+            {
+                current_index = GetLeftNodeIndex(current_index);
+            }
+        }
+
+        SetNodeValue(current_index, value);
+        size_++;
+        return current_index;
     }
 
-    constexpr container InOrder(const index_type index) const { return container{}; }
-    constexpr container PostOrder(const index_type index) const { return container{}; }
-    constexpr container PreOrder(const index_type index) const { return container{}; }
+    std::string InOrder(const index_type index) const
+    {
+        std::stringstream stream;
+        if (IsIndexValid(index))
+        {
+            stream << InOrder(GetLeftNodeIndex(index)) << ", ";
+            stream << GetNodeValue(index) << ", ";
+            stream << InOrder(GetRightNodeIndex(index)) << ", ";
+        }
+        return stream.str();
+    }
+    std::string PostOrder(const index_type index) const
+    {
+        std::stringstream stream;
+        if (IsIndexValid(index))
+        {
+            stream << PostOrder(GetLeftNodeIndex(index)) << ", ";
+            stream << PostOrder(GetRightNodeIndex(index)) << ", ";
+            stream << GetNodeValue(index) << ", ";
+        }
+        return stream.str();
+    }
+    std::string PreOrder(const index_type index) const
+    {
+        std::stringstream stream;
+        if (IsIndexValid(index))
+        {
+            stream << GetNodeValue(index) << ", ";
+            stream << PreOrder(GetLeftNodeIndex(index)) << ", ";
+            stream << PreOrder(GetRightNodeIndex(index)) << ", ";
+        }
+        return stream.str();
+    }
     constexpr size_type MaxDepth(const index_type index) const
     {
         size_type max_depth = 0UL;

@@ -11,6 +11,7 @@ cc_library(
         "calculator.h",
         "find_max_rides.h",
         "find_right_sibling.h",
+        "route_between_nodes.h",
         "shared_ptr.h",
     ],
     visibility = ["//visibility:public"],

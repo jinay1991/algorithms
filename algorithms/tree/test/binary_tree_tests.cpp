@@ -6,6 +6,7 @@
 
 #include <gtest/gtest.h>
 
+#include <iostream>
 #include <limits>
 
 namespace tree
@@ -29,17 +30,19 @@ TEST_F(TreeFixture, Insert_GivenTypicalNodes_ExpectUpdatedTree)
     Tree<std::int32_t, kMaxNumberOfNodes> unit{};
 
     // When
+    unit.Insert(3);
     unit.Insert(1);
     unit.Insert(2);
-    unit.Insert(3);
 
     // Then
     EXPECT_EQ(unit.GetSize(), 3UL);
     EXPECT_EQ(unit.GetCapacity(), kMaxNumberOfNodes);
-    EXPECT_EQ(unit.GetMaxDepth(), 1UL);
+    EXPECT_EQ(unit.GetMaxDepth(), 2UL);
     EXPECT_EQ(unit.GetMaxValue(), 3);
     EXPECT_EQ(unit.GetMinValue(), 1);
     EXPECT_TRUE(unit.IsBinarySearchTree());
+
+    std::cout << "PreOrder Traversal: " << unit.GetPreOrderTraversal() << std::endl;
 }
 }  // namespace
 }  // namespace tree
