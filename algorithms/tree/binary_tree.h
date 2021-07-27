@@ -152,6 +152,34 @@ class Tree
         return traversal;
     }
 
+    constexpr traversal_container GetLeftViewTraversal() const
+    {
+        traversal_container traversal{};
+        SideViewTraversal(GetRootIndex(), SideView::kLeft, traversal);
+        return traversal;
+    }
+
+    constexpr traversal_container GetRightViewTraversal() const
+    {
+        traversal_container traversal{};
+        SideViewTraversal(GetRootIndex(), SideView::kRight, traversal);
+        return traversal;
+    }
+
+    constexpr traversal_container GetTopViewTraversal() const
+    {
+        traversal_container traversal{};
+        SideViewTraversal(GetRootIndex(), SideView::kTop, traversal);
+        return traversal;
+    }
+
+    constexpr traversal_container GetBottomViewTraversal() const
+    {
+        traversal_container traversal{};
+        SideViewTraversal(GetRootIndex(), SideView::kBottom, traversal);
+        return traversal;
+    }
+
     constexpr size_type GetMaxDepth() const { return MaxDepth(GetRootIndex()); }
 
     constexpr size_type GetMinValue() const { return MinValue(GetRootIndex()); }
@@ -172,6 +200,13 @@ class Tree
 
   private:
     static constexpr index_type kRootIndex = 0UL;
+    enum class SideView : std::uint8_t
+    {
+        kLeft,
+        kRight,
+        kTop,
+        kBottom
+    };
 
     constexpr index_type GetRootIndex() const { return kRootIndex; }
 
@@ -268,6 +303,72 @@ class Tree
             traversal.push_back(GetNodeValue(index));
             InOrder(GetLeftNodeIndex(index), traversal);
             InOrder(GetRightNodeIndex(index), traversal);
+        }
+    }
+
+    constexpr void SideViewTraversal(const index_type index,
+                                     const SideView side_view,
+                                     traversal_container& traversal) const
+    {
+        if (IsNodeIndexValid(index))
+        {
+            std::queue<index_type> queue{};
+            queue.push(index);
+
+            while (!queue.empty())
+            {
+                const auto begin = 0UL;
+                const auto end = queue.size();
+                const auto last = end - 1UL;
+                for (auto i = begin; i < end; ++i)
+                {
+                    const index_type current_index = queue.front();
+                    queue.pop();
+
+                    bool capture = false;
+                    switch (side_view)
+                    {
+                        case SideView::kLeft:
+                        {
+                            capture = (i == begin);
+                            break;
+                        }
+                        case SideView::kRight:
+                        {
+                            capture = (i == last);
+                            break;
+                        }
+                        case SideView::kTop:
+                        {
+                            capture = ((i == begin) || (i == last));
+                            break;
+                        }
+                        case SideView::kBottom:
+                        {
+                            capture = IsLeafNode(current_index);
+                            break;
+                        }
+                        default:
+                        {
+                            break;
+                        }
+                    }
+
+                    if (capture)
+                    {
+                        traversal.push_back(GetNodeValue(current_index));
+                    }
+
+                    if (HasLeftNode(current_index))
+                    {
+                        queue.push(GetLeftNodeIndex(current_index));
+                    }
+                    if (HasRightNode(current_index))
+                    {
+                        queue.push(GetRightNodeIndex(current_index));
+                    }
+                }
+            }
         }
     }
 

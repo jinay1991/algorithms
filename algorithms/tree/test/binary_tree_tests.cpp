@@ -53,6 +53,10 @@ TEST_F(TreeFixture, Insert_GivenTypicalNodes_ExpectTreeProperty)
     EXPECT_THAT(unit.GetPreOrderTraversal(), ::testing::ElementsAre(3, 1, 2, 5));
     EXPECT_THAT(unit.GetPostOrderTraversal(), ::testing::ElementsAre(1, 2, 5, 3));
     EXPECT_THAT(unit.GetLevelOrderTraversal(), ::testing::ElementsAre(3, 2, 5, 1));
+    EXPECT_THAT(unit.GetLeftViewTraversal(), ::testing::ElementsAre(3, 2, 1));
+    EXPECT_THAT(unit.GetRightViewTraversal(), ::testing::ElementsAre(3, 5, 1));
+    EXPECT_THAT(unit.GetTopViewTraversal(), ::testing::ElementsAre(3, 2, 5, 1));
+    EXPECT_THAT(unit.GetBottomViewTraversal(), ::testing::ElementsAre(5, 1));
 }
 
 TEST_F(TreeFixture, InsertFromList_GivenTypicalListOfNodes_ExpectIncompleteBinaryTreeProperty)
@@ -78,6 +82,10 @@ TEST_F(TreeFixture, InsertFromList_GivenTypicalListOfNodes_ExpectIncompleteBinar
     EXPECT_FALSE(unit.IsCompleteBinaryTree());
     EXPECT_THAT(unit.GetInOrderTraversal(), ::testing::ElementsAre(3, 5, 7, 10, 20, 30));
     EXPECT_THAT(unit.GetArrayIndexTraversal(), ::testing::ElementsAre(10, 5, 20, 3, 7, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0));
+    EXPECT_THAT(unit.GetLeftViewTraversal(), ::testing::ElementsAre(10, 5, 3));
+    EXPECT_THAT(unit.GetRightViewTraversal(), ::testing::ElementsAre(10, 20, 30));
+    EXPECT_THAT(unit.GetTopViewTraversal(), ::testing::ElementsAre(10, 5, 20, 3, 30));
+    EXPECT_THAT(unit.GetBottomViewTraversal(), ::testing::ElementsAre(3, 7, 30));
 }
 
 TEST_F(TreeFixture, InsertFromList_GivenTypicalListOfNodes_ExpectCompleteBinaryTreeProperty)
@@ -106,6 +114,10 @@ TEST_F(TreeFixture, InsertFromList_GivenTypicalListOfNodes_ExpectCompleteBinaryT
                 ::testing::ElementsAre(8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13, 15));
     EXPECT_THAT(unit.GetArrayIndexTraversal(),
                 ::testing::ElementsAre(8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13, 15));
+    EXPECT_THAT(unit.GetLeftViewTraversal(), ::testing::ElementsAre(8, 4, 2, 1));
+    EXPECT_THAT(unit.GetRightViewTraversal(), ::testing::ElementsAre(8, 12, 14, 15));
+    EXPECT_THAT(unit.GetTopViewTraversal(), ::testing::ElementsAre(8, 4, 12, 2, 14, 1, 15));
+    EXPECT_THAT(unit.GetBottomViewTraversal(), ::testing::ElementsAre(1, 3, 5, 7, 9, 11, 13, 15));
 }
 }  // namespace
 }  // namespace tree
