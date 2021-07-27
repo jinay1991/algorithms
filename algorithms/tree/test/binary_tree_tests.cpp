@@ -46,8 +46,8 @@ TEST_F(TreeFixture, Insert_GivenTypicalNodes_ExpectTreeProperty)
     EXPECT_TRUE(unit.IsBinarySearchTree());
     EXPECT_TRUE(unit.IsMinimalBinaryTree());
     EXPECT_TRUE(unit.IsBalancedBinaryTree());
-    EXPECT_TRUE(unit.IsPerfectBinaryTree());
-    EXPECT_TRUE(unit.IsFullBinaryTree());
+    EXPECT_FALSE(unit.IsPerfectBinaryTree());
+    EXPECT_FALSE(unit.IsFullBinaryTree());
     EXPECT_TRUE(unit.IsCompleteBinaryTree());
     EXPECT_THAT(unit.GetInOrderTraversal(), ::testing::ElementsAre(1, 2, 3, 5));
     EXPECT_THAT(unit.GetPreOrderTraversal(), ::testing::ElementsAre(3, 1, 2, 5));
@@ -73,8 +73,8 @@ TEST_F(TreeFixture, InsertFromList_GivenTypicalListOfNodes_ExpectIncompleteBinar
     EXPECT_TRUE(unit.IsBinarySearchTree());
     EXPECT_TRUE(unit.IsMinimalBinaryTree());
     EXPECT_TRUE(unit.IsBalancedBinaryTree());
-    EXPECT_TRUE(unit.IsPerfectBinaryTree());
-    EXPECT_TRUE(unit.IsFullBinaryTree());
+    EXPECT_FALSE(unit.IsPerfectBinaryTree());
+    EXPECT_FALSE(unit.IsFullBinaryTree());
     EXPECT_FALSE(unit.IsCompleteBinaryTree());
     EXPECT_THAT(unit.GetInOrderTraversal(), ::testing::ElementsAre(3, 5, 7, 10, 20, 30));
     EXPECT_THAT(unit.GetArrayIndexTraversal(), ::testing::ElementsAre(10, 5, 20, 3, 7, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0));

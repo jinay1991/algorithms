@@ -164,9 +164,9 @@ class Tree
 
     constexpr bool IsBalancedBinaryTree() const { return true; }
 
-    constexpr bool IsFullBinaryTree() const { return true; }
+    constexpr bool IsFullBinaryTree() const { return IsFullBinaryTree(GetRootIndex()); }
 
-    bool IsCompleteBinaryTree() const { return IsCompleteBinaryTree(GetRootIndex()); }
+    constexpr bool IsCompleteBinaryTree() const { return IsCompleteBinaryTree(GetRootIndex()); }
 
     constexpr bool IsPerfectBinaryTree() const { return (IsFullBinaryTree() && IsCompleteBinaryTree()); }
 
@@ -355,25 +355,26 @@ class Tree
     constexpr bool IsFullBinaryTree(const index_type index) const
     {
         bool is_full_binary_tree = true;
-        if (IsNodeIndexValid(is_full_binary_tree))
+        if (IsNodeIndexValid(index))
         {
-            if (((!HasLeftNode(index)) && HasRightNode(index)) || ((HasLeftNode(index)) && (!HasRightNode(index))))
+            if (IsLeafNode(index))
             {
-                is_full_binary_tree = false;
+                is_full_binary_tree = true;
             }
-            else if ((!IsFullBinaryTree(GetLeftNodeIndex(index))) && (!IsFullBinaryTree(GetRightNodeIndex(index))))
+            else if (HasLeftNode(index) && HasRightNode(index))
             {
-                is_full_binary_tree = false;
+                is_full_binary_tree =
+                    IsFullBinaryTree(GetLeftNodeIndex(index)) && IsFullBinaryTree(GetRightNodeIndex(index));
             }
             else
             {
-                // do nothing
+                is_full_binary_tree = false;
             }
         }
         return is_full_binary_tree;
     }
 
-    bool IsCompleteBinaryTree(const index_type index) const
+    constexpr bool IsCompleteBinaryTree(const index_type index) const
     {
         bool is_complete_binary_tree = true;
         if (IsNodeIndexValid(index))
@@ -384,14 +385,19 @@ class Tree
             }
             else if (HasLeftNode(index) && HasRightNode(index))
             {
-                if ((!IsCompleteBinaryTree(GetLeftNodeIndex(index))) ||
-                    (!IsCompleteBinaryTree(GetRightNodeIndex(index))))
-                {
-                    is_complete_binary_tree = false;
-                }
+                is_complete_binary_tree =
+                    IsCompleteBinaryTree(GetLeftNodeIndex(index)) && IsCompleteBinaryTree(GetRightNodeIndex(index));
+            }
+            else if (HasLeftNode(index) && !HasRightNode(index))
+            {
+                is_complete_binary_tree = IsCompleteBinaryTree(GetLeftNodeIndex(index));
+            }
+            else
+            {
+                is_complete_binary_tree = false;
             }
         }
-        return (is_complete_binary_tree);
+        return is_complete_binary_tree;
     }
 
     const value_type invalid_value_;
