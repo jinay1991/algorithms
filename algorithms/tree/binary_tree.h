@@ -135,7 +135,7 @@ class Tree
         return traversal;
     }
 
-    traversal_container GetLevelOrderTraversal() const
+    constexpr traversal_container GetLevelOrderTraversal() const
     {
         traversal_container traversal{};
         LevelOrder(GetRootIndex(), traversal);
@@ -252,6 +252,7 @@ class Tree
 
     constexpr size_type GetMaxNodes() const
     {
+        /// total nodes before level = 2 ^ (l + 1) - 1, where l = level
         return static_cast<size_type>(std::pow(2UL, GetMaxLevel(GetSize()) + 1UL) - 1UL);
     }
 
