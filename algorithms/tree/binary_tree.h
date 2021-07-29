@@ -40,8 +40,6 @@ class Tree
             index_type current_index = GetRootIndex();
             if (IsEmpty())
             {
-                // std::cout << "Inserted " << value << " to the root (idx: " << current_index
-                //           << ") => size: " << (GetSize() + 1UL) << std::endl;
                 SetNodeValue(current_index, value);
                 size_++;
             }
@@ -57,10 +55,6 @@ class Tree
                         }
                         else
                         {
-                            // std::cout << "Inserted " << value
-                            //           << " to the left (idx: " << GetLeftNodeIndex(current_index) << ") of "
-                            //           << GetNodeValue(current_index) << " (idx: " << current_index
-                            //           << ") => size: " << (GetSize() + 1UL) << std::endl;
                             SetLeftNodeValue(current_index, value);
                             size_++;
                             break;
@@ -74,10 +68,6 @@ class Tree
                         }
                         else
                         {
-                            // std::cout << "Inserted " << value
-                            //           << " to the right (idx: " << GetRightNodeIndex(current_index) << ") of "
-                            //           << GetNodeValue(current_index) << " (idx: " << current_index
-                            //           << ") => size: " << (GetSize() + 1UL) << std::endl;
                             SetRightNodeValue(current_index, value);
                             size_++;
                             break;
