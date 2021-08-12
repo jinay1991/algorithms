@@ -2,8 +2,8 @@
 /// @file
 /// @copyright Copyright (C) 2021. MIT License.
 ///
-#ifndef ARGOAI_FIND_RIGHT_SIBLING_H
-#define ARGOAI_FIND_RIGHT_SIBLING_H
+#ifndef PROBLEM_STATEMENT_FIND_RIGHT_SIBLING_H
+#define PROBLEM_STATEMENT_FIND_RIGHT_SIBLING_H
 
 #include <iostream>
 #include <utility>
@@ -33,4 +33,4 @@ std::vector<std::pair<const Node*, const Node*>> find_right_siblings(const Node&
 
 }  // namespace problem_statement
 
-#endif  /// ARGOAI_FIND_RIGHT_SIBLING_H
+#endif  /// PROBLEM_STATEMENT_FIND_RIGHT_SIBLING_H

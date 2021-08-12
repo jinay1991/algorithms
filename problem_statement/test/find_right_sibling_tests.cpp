@@ -108,15 +108,15 @@ inline std::ostream& operator<<(std::ostream& stream, const std::pair<const Node
  *  Expected Output:
  *  0 -> None
  *  1 -> 5
- *  2 -> 6
- *  3 -> 7
- *  4 -> 11
  *  5 -> None
+ *  2 -> 6
  *  6 -> 9
+ *  9 -> None
+ *  3 -> 7
  *  7 -> 8
  *  8 -> 10
- *  9 -> None
  *  10 -> None
+ *  4 -> 11
  *  11 -> None
  */
 TEST_F(FindRightSiblingFixture, GivenTypicalTestTree_ExpectRightSiblings)

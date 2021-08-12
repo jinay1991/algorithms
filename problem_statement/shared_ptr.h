@@ -2,8 +2,8 @@
 /// @file
 /// @copyright Copyright (C) 2021. MIT License.
 ///
-#ifndef ARGOAI_SHARED_PTR_H
-#define ARGOAI_SHARED_PTR_H
+#ifndef PROBLEM_STATEMENT_SHARED_PTR_H
+#define PROBLEM_STATEMENT_SHARED_PTR_H
 
 #include <cstdint>
 
@@ -28,4 +28,4 @@ class shared_ptr
 };
 }  // namespace problem_statement
 
-#endif  /// ARGOAI_SHARED_PTR_H
+#endif  /// PROBLEM_STATEMENT_SHARED_PTR_H

@@ -18,7 +18,7 @@ namespace graph
 /// @class BreadthFirstSearch
 /// @brief Provide BFS (Breadth First Search) based shortest path search functionality for given Graph
 ///
-/// @tparam Graph [in] Graph Type to look in for finding shorest path using A*.
+/// @tparam Graph [in] Graph Type to look in for finding shortest path using BFS
 /// @tparam Location [in] Location Type for each node/cell in Graph represented in cartesian coordinate systems.
 ///
 template <typename Graph, typename Location>
@@ -35,7 +35,7 @@ class BreadthFirstSearch
     ///
     /// @param graph [in] Instance to the Graph/Grid
     ///
-    constexpr explicit BreadthFirstSearch(const Graph& graph) : graph_{graph}, came_from_{}, shortest_path_{}
+    constexpr explicit BreadthFirstSearch(const Graph& graph) : graph_{graph}, visited_{}, shortest_path_{}
     {
         static_assert(std::is_pod<Location>::value, "Location must be plain type.");
     }
@@ -71,7 +71,7 @@ class BreadthFirstSearch
         std::queue<Location> queue;
         queue.push(start);
 
-        came_from_[start] = start;
+        visited_[start] = start;
 
         while (!queue.empty())
         {
@@ -85,10 +85,10 @@ class BreadthFirstSearch
 
             for (Location next : graph_.GetNeighbors(current))
             {
-                if (came_from_.find(next) == came_from_.end())
+                if (visited_.find(next) == visited_.end())
                 {
                     queue.push(next);
-                    came_from_[next] = current;
+                    visited_[next] = current;
                 }
             }
         }
@@ -108,7 +108,7 @@ class BreadthFirstSearch
         while (current != start)
         {
             shortest_path_.push_back(current);
-            current = came_from_[current];
+            current = visited_[current];
         }
         shortest_path_.push_back(start);
         std::reverse(shortest_path_.begin(), shortest_path_.end());
@@ -123,7 +123,7 @@ class BreadthFirstSearch
     ///
     /// @brief Location Map for all the visited nodes/cells on Graph/Grid with it's relation to previous node/cell.
     ///
-    std::unordered_map<Location, Location> came_from_;
+    std::unordered_map<Location, Location> visited_;
 
     ///
     /// @brief Shortest Path found using A* in form of List of Locations.
