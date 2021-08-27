@@ -9,6 +9,8 @@ cc_test(
         "find_right_sibling_tests.cpp",
         "image_tests.cpp",
         "insert_sorted_tests.cpp",
+        "invalid_transactions_tests.cpp",
+        "two_city_scheduling_tests.cpp",
     ],
     deps = [
         "//problem_statement",

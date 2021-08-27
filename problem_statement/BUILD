@@ -7,6 +7,8 @@ cc_library(
         "calculator.cpp",
         "find_max_rides.cpp",
         "find_right_sibling.cpp",
+        "invalid_transactions.cpp",
+        "two_city_scheduling.cpp",
     ],
     hdrs = [
         "anagram.h",
@@ -15,7 +17,9 @@ cc_library(
         "find_right_sibling.h",
         "image.h",
         "insert_sorted.h",
+        "invalid_transactions.h",
         "shared_ptr.h",
+        "two_city_scheduling.h",
     ],
     visibility = ["//visibility:public"],
 )
