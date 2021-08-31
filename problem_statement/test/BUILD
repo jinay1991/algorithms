@@ -10,6 +10,8 @@ cc_test(
         "image_tests.cpp",
         "insert_sorted_tests.cpp",
         "invalid_transactions_tests.cpp",
+        "path_with_max_probability_tests.cpp",
+        "tallest_billboard_tests.cpp",
         "two_city_scheduling_tests.cpp",
     ],
     deps = [

@@ -38,13 +38,14 @@ using InvalidTransactionsFixture_WithTransactions = InvalidTransactionsFixtureT<
 
 // clang-format off
 INSTANTIATE_TEST_SUITE_P(
-    ValidateTransaction,
+    InvalidTransactions,
     InvalidTransactionsFixture_WithTransactions,
     ::testing::Values(
-        //                              transactions                      ,          (expected) invalid_transactions
-        TestTransactionParam{{"alice,20,800,mtv", "alice,50,100,beijing" }, {"alice,20,800,mtv", "alice,50,100,beijing"}},
-        TestTransactionParam{{"alice,20,800,mtv", "alice,50,1200,beijing"}, {"alice,50,1200,beijing"                   }},
-        TestTransactionParam{{"alice,20,800,mtv", "bob,50,1200,mtv"      }, {"bob,50,1200,mtv"                         }}
+        //                              transactions                                           ,          (expected) invalid_transactions
+        TestTransactionParam{{"alice,20,800,mtv", "alice,50,100,beijing"                      }, {"alice,20,800,mtv", "alice,50,100,beijing"                       }},
+        TestTransactionParam{{"alice,20,800,mtv", "alice,50,1200,beijing"                     }, {"alice,50,1200,beijing"                                          }},
+        TestTransactionParam{{"alice,20,800,mtv", "bob,50,1200,mtv"                           }, {"bob,50,1200,mtv"                                                }},
+        TestTransactionParam{{"alice,20,800,mtv", "alice,50,100,mtv", "alice,51,100,frankfurt"}, {"alice,20,800,mtv", "alice,50,100,mtv", "alice,51,100,frankfurt" }}
 ));
 // clang-format on
 

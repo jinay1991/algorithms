@@ -5,43 +5,45 @@
 #include "problem_statement/invalid_transactions.h"
 
 #include <algorithm>
+#include <cstdlib>
 #include <sstream>
 
 namespace problem_statement
 {
+namespace
+{
 
+constexpr std::chrono::minutes absdiff(const std::chrono::minutes& current,
+                                       const std::chrono::minutes& previous) noexcept
+{
+    return ((current > previous) ? (current - previous) : (previous - current));
+}
+
+}  // namespace
 using namespace std::chrono_literals;
 
 static constexpr std::uint32_t kMaxTransactionAmount{1000U};
 
-InvalidTransactions::InvalidTransactions() : previous_transaction_{} {}
+InvalidTransactions::InvalidTransactions() : previous_transactions_{} {}
 
 std::vector<std::string> InvalidTransactions::GetInvalidTransactions(
     const std::vector<std::string>& transactions) noexcept
 {
     std::vector<std::string> invalid_transactions;
 
-    for (auto it = transactions.begin(); it != transactions.end(); ++it)
+    for (const auto& transaction : transactions)
     {
-        const auto transaction = ParseTransaction(*it);
-
-        if (transaction.amount > kMaxTransactionAmount)
+        const auto parsed_transaction = ParseTransaction(transaction);
+        if (!IsTransactionAmountInvalid(parsed_transaction))
         {
-            invalid_transactions.push_back(*it);
-        }
-        else
-        {
-            if (HasPreviousTransaction() && IsTransactionAllowed(transaction))
-            {
-                invalid_transactions.push_back(*(it - 1));
-                invalid_transactions.push_back(*it);
-            }
-            else
-            {
-                previous_transaction_ = transaction;
-            }
+            previous_transactions_.push_back(parsed_transaction);
         }
     }
+
+    std::copy_if(transactions.cbegin(),
+                 transactions.cend(),
+                 std::back_inserter(invalid_transactions),
+                 [this](const auto& transaction) { return IsTransactionInvalid(transaction); });
 
     return invalid_transactions;
 }
@@ -61,26 +63,33 @@ Transaction InvalidTransactions::ParseTransaction(const std::string& transaction
     std::getline(stream, result.city, delimiter);
 
     result.time = std::chrono::minutes{std::stoi(time_min_str)};
-    result.amount = std::stoi(amount_str);
+    result.amount = static_cast<std::uint32_t>(std::stoi(amount_str));
 
     return result;
 }
 
-bool InvalidTransactions::IsTransactionAmountValid(const Transaction& transaction) const noexcept
+bool InvalidTransactions::IsTransactionAmountInvalid(const Transaction& parsed_transaction) const noexcept
 {
-    return (transaction.amount <= kMaxTransactionAmount);
+    return (parsed_transaction.amount > kMaxTransactionAmount);
 }
 
-bool InvalidTransactions::IsTransactionAllowed(const Transaction& transaction) const noexcept
+bool InvalidTransactions::IsTransactionRepeated(const Transaction& parsed_transaction) const noexcept
 {
-    return ((transaction.time - previous_transaction_.time <= 60min) &&
-            (transaction.name == previous_transaction_.name) && (transaction.city != previous_transaction_.city));
+    const auto it = std::find_if(previous_transactions_.cbegin(),
+                                 previous_transactions_.cend(),
+                                 [&current_transaction = parsed_transaction](const auto& previous_transaction)
+                                 {
+                                     return ((absdiff(current_transaction.time, previous_transaction.time) <= 60min) &&
+                                             (current_transaction.name == previous_transaction.name) &&
+                                             (current_transaction.city != previous_transaction.city));
+                                 });
+    return (it != previous_transactions_.cend());
 }
 
-bool InvalidTransactions::HasPreviousTransaction() const noexcept
+bool InvalidTransactions::IsTransactionInvalid(const std::string& transaction) const noexcept
 {
-    return ((previous_transaction_.time != 0min) && (!previous_transaction_.name.empty()) &&
-            (!previous_transaction_.city.empty()) && (previous_transaction_.amount != 0U));
+    const auto parsed_transaction = ParseTransaction(transaction);
+    return (IsTransactionAmountInvalid(parsed_transaction) || IsTransactionRepeated(parsed_transaction));
 }
 
 }  // namespace problem_statement

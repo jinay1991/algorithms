@@ -8,6 +8,7 @@ cc_library(
         "find_max_rides.cpp",
         "find_right_sibling.cpp",
         "invalid_transactions.cpp",
+        "path_with_max_probability.cpp",
         "two_city_scheduling.cpp",
     ],
     hdrs = [
@@ -18,7 +19,9 @@ cc_library(
         "image.h",
         "insert_sorted.h",
         "invalid_transactions.h",
+        "path_with_max_probability.h",
         "shared_ptr.h",
+        "tallest_billboard.h",
         "two_city_scheduling.h",
     ],
     visibility = ["//visibility:public"],
