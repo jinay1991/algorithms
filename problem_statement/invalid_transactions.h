@@ -8,7 +8,9 @@
 
 #include <chrono>
 #include <cstdint>
+#include <map>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace problem_statement
@@ -30,12 +32,13 @@ class InvalidTransactions
     std::vector<std::string> GetInvalidTransactions(const std::vector<std::string>& transactions) noexcept;
 
   private:
-    Transaction ParseTransaction(const std::string& transaction) const noexcept;
-    bool IsTransactionAmountInvalid(const Transaction& parsed_transaction) const noexcept;
-    bool IsTransactionRepeated(const Transaction& parsed_transaction) const noexcept;
+    std::string Encode(const Transaction& transaction) const noexcept;
+    Transaction Decode(const std::string& transaction) const noexcept;
+    bool IsTransactionAmountInvalid(const Transaction& transaction) const noexcept;
+    bool IsTransactionRepeated(const Transaction& transaction) const noexcept;
     bool IsTransactionInvalid(const std::string& transaction) const noexcept;
 
-    std::vector<Transaction> previous_transactions_;
+    std::map<std::string, std::pair<std::vector<Transaction>, bool>> parsed_transactions_;
 };
 
 }  // namespace problem_statement

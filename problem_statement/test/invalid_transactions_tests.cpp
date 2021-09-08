@@ -41,11 +41,12 @@ INSTANTIATE_TEST_SUITE_P(
     InvalidTransactions,
     InvalidTransactionsFixture_WithTransactions,
     ::testing::Values(
-        //                              transactions                                           ,          (expected) invalid_transactions
-        TestTransactionParam{{"alice,20,800,mtv", "alice,50,100,beijing"                      }, {"alice,20,800,mtv", "alice,50,100,beijing"                       }},
-        TestTransactionParam{{"alice,20,800,mtv", "alice,50,1200,beijing"                     }, {"alice,50,1200,beijing"                                          }},
-        TestTransactionParam{{"alice,20,800,mtv", "bob,50,1200,mtv"                           }, {"bob,50,1200,mtv"                                                }},
-        TestTransactionParam{{"alice,20,800,mtv", "alice,50,100,mtv", "alice,51,100,frankfurt"}, {"alice,20,800,mtv", "alice,50,100,mtv", "alice,51,100,frankfurt" }}
+        //                              transactions                                                                                                                                    ,          (expected) invalid_transactions
+        TestTransactionParam{{"alice,20,800,mtv", "alice,50,100,beijing"                                                                                                               }, {"alice,20,800,mtv", "alice,50,100,beijing"                             }},
+        TestTransactionParam{{"alice,20,800,mtv", "alice,50,1200,beijing"                                                                                                              }, {"alice,50,1200,beijing"                                                }},
+        TestTransactionParam{{"alice,20,800,mtv", "bob,50,1200,mtv"                                                                                                                    }, {"bob,50,1200,mtv"                                                      }},
+        TestTransactionParam{{"alice,20,800,mtv", "alice,50,100,mtv", "alice,51,100,frankfurt"                                                                                         }, {"alice,20,800,mtv", "alice,50,100,mtv", "alice,51,100,frankfurt"       }},
+        TestTransactionParam{{"bob,689,1910,barcelona", "alex,696,122,bangkok", "bob,832,1726,barcelona", "bob,820,596,bangkok", "chalicefy,217,669,barcelona", "bob,175,221,amsterdam"}, {"bob,689,1910,barcelona","bob,832,1726,barcelona","bob,820,596,bangkok"}}
 ));
 // clang-format on
 

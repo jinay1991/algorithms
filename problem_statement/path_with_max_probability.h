@@ -23,8 +23,6 @@ class PathWithMaxProbability
                              const std::vector<double>& success_probability,
                              const std::int32_t start,
                              const std::int32_t end);
-
-  private:
 };
 
 }  // namespace problem_statement

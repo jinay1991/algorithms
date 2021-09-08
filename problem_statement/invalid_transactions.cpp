@@ -24,7 +24,7 @@ using namespace std::chrono_literals;
 
 static constexpr std::uint32_t kMaxTransactionAmount{1000U};
 
-InvalidTransactions::InvalidTransactions() : previous_transactions_{} {}
+InvalidTransactions::InvalidTransactions() : parsed_transactions_{} {}
 
 std::vector<std::string> InvalidTransactions::GetInvalidTransactions(
     const std::vector<std::string>& transactions) noexcept
@@ -33,11 +33,9 @@ std::vector<std::string> InvalidTransactions::GetInvalidTransactions(
 
     for (const auto& transaction : transactions)
     {
-        const auto parsed_transaction = ParseTransaction(transaction);
-        if (!IsTransactionAmountInvalid(parsed_transaction))
-        {
-            previous_transactions_.push_back(parsed_transaction);
-        }
+        const auto parsed_transaction = Decode(transaction);
+        parsed_transactions_[transaction].push_back(
+            std::make_pair(parsed_transaction, IsTransactionAmountInvalid(parsed_transaction)));
     }
 
     std::copy_if(transactions.cbegin(),
@@ -48,7 +46,15 @@ std::vector<std::string> InvalidTransactions::GetInvalidTransactions(
     return invalid_transactions;
 }
 
-Transaction InvalidTransactions::ParseTransaction(const std::string& transaction) const noexcept
+std::string InvalidTransactions::Encode(const Transaction& transaction) const noexcept
+{
+    std::stringstream stream{};
+    stream << transaction.name << "," << transaction.time.count() << "," << transaction.amount << ","
+           << transaction.city;
+    return stream.str();
+}
+
+Transaction InvalidTransactions::Decode(const std::string& transaction) const noexcept
 {
     Transaction result;
 
@@ -68,27 +74,28 @@ Transaction InvalidTransactions::ParseTransaction(const std::string& transaction
     return result;
 }
 
-bool InvalidTransactions::IsTransactionAmountInvalid(const Transaction& parsed_transaction) const noexcept
+bool InvalidTransactions::IsTransactionAmountInvalid(const Transaction& transaction) const noexcept
 {
-    return (parsed_transaction.amount > kMaxTransactionAmount);
+    return (transaction.amount > kMaxTransactionAmount);
 }
 
-bool InvalidTransactions::IsTransactionRepeated(const Transaction& parsed_transaction) const noexcept
+bool InvalidTransactions::IsTransactionRepeated(const Transaction& transaction) const noexcept
 {
-    const auto it = std::find_if(previous_transactions_.cbegin(),
-                                 previous_transactions_.cend(),
-                                 [&current_transaction = parsed_transaction](const auto& previous_transaction)
+    const auto it = std::find_if(parsed_transactions_.cbegin(),
+                                 parsed_transactions_.cend(),
+                                 [&current_transaction = transaction](const auto& parsed_transaction)
                                  {
+                                     const auto previous_transaction = parsed_transaction.second;
                                      return ((absdiff(current_transaction.time, previous_transaction.time) <= 60min) &&
                                              (current_transaction.name == previous_transaction.name) &&
                                              (current_transaction.city != previous_transaction.city));
                                  });
-    return (it != previous_transactions_.cend());
+    return (it != parsed_transactions_.cend());
 }
 
 bool InvalidTransactions::IsTransactionInvalid(const std::string& transaction) const noexcept
 {
-    const auto parsed_transaction = ParseTransaction(transaction);
+    const auto parsed_transaction = Decode(transaction);
     return (IsTransactionAmountInvalid(parsed_transaction) || IsTransactionRepeated(parsed_transaction));
 }
 

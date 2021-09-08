@@ -5,11 +5,12 @@ cc_test(
     srcs = [
         "anagram_tests.cpp",
         "calculator_tests.cpp",
+        "distance_between_nodes_tests.cpp",
         "find_max_rides_tests.cpp",
         "find_right_sibling_tests.cpp",
         "image_tests.cpp",
         "insert_sorted_tests.cpp",
-        "invalid_transactions_tests.cpp",
+        # "invalid_transactions_tests.cpp",
         "path_with_max_probability_tests.cpp",
         "tallest_billboard_tests.cpp",
         "two_city_scheduling_tests.cpp",
