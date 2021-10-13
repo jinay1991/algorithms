@@ -5,15 +5,27 @@
 #ifndef PROBLEM_STATEMENT_IS_PRIME_H
 #define PROBLEM_STATEMENT_IS_PRIME_H
 
+#include <cmath>
 #include <cstdint>
 #include <vector>
 
 namespace problem_statement
 {
-bool IsPrime(const std::int32_t value) noexcept
+
+constexpr bool IsPrime(const std::int32_t value) noexcept
 {
-    /// @todo: Implement Logic - Optimal
-    return false;
+    if (value <= 3)
+    {
+        return true;
+    }
+    for (auto i = 3; i < std::sqrt(value); i++)
+    {
+        if (value % i == 0)
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 std::vector<std::int32_t> GetPrimeNumbersBeforeN(const std::int32_t n) noexcept
