@@ -4,6 +4,7 @@ cc_test(
         "binary_tree_tests.cpp",
         "expression_tree_tests.cpp",
         "max_heap_tests.cpp",
+        "trie_tests.cpp",
     ],
     deps = [
         "//algorithms/tree",
