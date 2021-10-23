@@ -1,0 +1,26 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+    clang-format:
+        steps:
+            - uses: ubuntu:20.04
+            - run: apt-get update && apt-get install -y clang-format
+            - run: find . -regex '.*\.\(ino\|cpp\|hpp\|cc\|cxx\|h\)' -exec cat {} \; | diff -u <(find . -regex '.*\.\(ino\|cpp\|hpp\|cc\|cxx\|h\)' -exec clang-format -style=file {} -verbose \;) -
+    buildifier:
+        steps:
+            - uses: ubuntu:20.04
+            - run: apt-get update && apt-get install -y wget curl && wget https://github.com/bazelbuild/buildtools/releases/download/4.0.1/buildifier && chmod +x buildifier && mv buildifier /usr/bin
+            - run: buildifier -v -d -r .
+
+    cppcheck:
+        steps:
+            - uses: ubuntu:20.04
+            - run: apt-get update && apt-get install -y cppcheck python python-pygments
+            - run: cppcheck --template=gcc --enable=all --inconclusive --std=c++14 -I algorithms/**/*.h algorithms/**/*.cpp
+            - run: cppcheck --template=gcc --enable=all --inconclusive --std=c++14 -I problem_statement/**/*.h problem_statement/**/*.cpp
