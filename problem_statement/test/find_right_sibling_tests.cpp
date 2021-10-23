@@ -20,15 +20,16 @@ class FindRightSiblingFixture : public ::testing::Test
   protected:
     /// @brief Function to make our test tree. It is complete, and you do not need to modify it.
     /// @return A vector of nodes for the following tree, with the root at the front of the vector.
-    ///             0
-    ///            / \
-    ///           1   5
-    ///          /   / \
-    ///         2   6   9
-    ///        /   / \   \
-    ///       3   7   8   10
-    ///      /             \
-    ///     4               11
+    /*             0
+     *            / \
+     *           1   5
+     *          /   / \
+     *         2   6   9
+     *        /   / \   \
+     *       3   7   8   10
+     *      /             \
+     *     4               11
+     */
     inline std::vector<Node> GenerateTestTree() const noexcept
     {
         // Construct the nodes in a vector of pointers for convenience

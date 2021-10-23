@@ -5,9 +5,18 @@ cc_test(
     srcs = [
         "anagram_tests.cpp",
         "calculator_tests.cpp",
+        "distance_between_nodes_tests.cpp",
         "find_max_rides_tests.cpp",
         "find_right_sibling_tests.cpp",
+        "image_tests.cpp",
         "insert_sorted_tests.cpp",
+        "is_prime_tests.cpp",
+        # "find_team_players_tests.cpp",
+        "asteroid_collision_tests.cpp",
+        # "invalid_transactions_tests.cpp",
+        "path_with_max_probability_tests.cpp",
+        "tallest_billboard_tests.cpp",
+        "two_city_scheduling_tests.cpp",
     ],
     deps = [
         "//problem_statement",
