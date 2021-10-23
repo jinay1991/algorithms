@@ -40,7 +40,6 @@ class Trie
     ~Trie();
 
     void InsertDictionary(const std::vector<std::string>& dictionary);
-    ;
 
     void Insert(const std::string& word);
 
