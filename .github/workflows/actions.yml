@@ -1,0 +1,41 @@
+name: actions
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+    clang-format:
+        runs-on: ubuntu-20.04
+        steps:
+            - uses: actions/checkout@v2
+            - run: sudo apt-get update && sudo apt-get install -y clang-format
+            - run: find . -regex '.*\.\(ino\|cpp\|hpp\|cc\|cxx\|h\)' -exec cat {} \; | diff -u <(find . -regex '.*\.\(ino\|cpp\|hpp\|cc\|cxx\|h\)' -exec clang-format -style=file {} -verbose \;) -
+    buildifier:
+        runs-on: ubuntu-20.04
+        steps:
+            - uses: actions/checkout@v2
+            - run: sudo apt-get update && sudo apt-get install -y wget curl
+            - run: wget https://github.com/bazelbuild/buildtools/releases/download/4.0.1/buildifier && chmod +x buildifier
+            - run: sudo mv buildifier /usr/bin
+            - run: buildifier -v -d -r .
+
+    cppcheck:
+        runs-on: ubuntu-20.04
+        steps:
+            - uses: actions/checkout@v2
+            - run: sudo apt-get update && sudo apt-get install -y cppcheck python python-pygments
+            - run: cppcheck --template=gcc --enable=all --inconclusive --std=c++14 -I algorithms/**/*.h algorithms/**/*.cpp
+            - run: cppcheck --template=gcc --enable=all --inconclusive --std=c++14 -I problem_statement/**/*.h problem_statement/**/*.cpp
+    build:
+        runs-on: ubuntu-20.04
+        steps:
+            - uses: actions/checkout@v2
+            - run: sudo apt-get update && sudo apt-get install -y wget curl gnupg g++ openjdk-11-jdk openjdk-11-jre lcov
+            - run: curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor > bazel.gpg
+            - run: sudo mv bazel.gpg /etc/apt/trusted.gpg.d/
+            - run: echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+            - run: sudo apt-get update && sudo apt-get install -y bazel
+            - run: echo "source /etc/bash_completion.d/bazel" >> ~/.bashrc
+            - run: bazel build //...
+            - run: bazel test //...  --test_output=all
