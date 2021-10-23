@@ -39,7 +39,7 @@ INSTANTIATE_TEST_SUITE_P(IsPrime,
                                            TestValueParam{13, true},
                                            TestValueParam{14, false}));
 
-TEST_P(IsPrimeFixture_WithValue, IsPrime_GivenTypicalValue_ExpectIsPrime)
+TEST_P(IsPrimeFixture_WithValue, DISABLED_IsPrime_GivenTypicalValue_ExpectIsPrime)
 {
     // Given
     const auto param = GetParam();
