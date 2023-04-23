@@ -4,9 +4,13 @@
 ///
 #include "problem_statement/count_character.h"
 
+#include <algorithm>
+#include <iostream>
+
 namespace problem_statement
 {
-std::int32_t CountCharacter(const std::vector<std::string>& words, const std::string characters) noexcept
+
+std::size_t CountCharacter(const std::vector<std::string>& words, const std::string& characters) noexcept
 {
     /// TODO: Implement the Algorithm -
     /// You are given an array of strings words and a string chars.
@@ -31,5 +35,34 @@ std::int32_t CountCharacter(const std::vector<std::string>& words, const std::st
     /// 1 <= words[i].length, chars.length <= 100
     /// words[i] and chars consist of lowercase English letters.
 
+    std::size_t count{0};
+
+    std::string sorted_characters{characters};
+    std::sort(sorted_characters.begin(), sorted_characters.end());
+
+    // remove duplicates
+    sorted_characters.erase(std::unique(sorted_characters.begin(), sorted_characters.end()), sorted_characters.end());
+
+    for (auto& word : words)
+    {
+        std::string sorted_word{word};
+        std::sort(sorted_word.begin(), sorted_word.end());
+
+        std::size_t length{0};
+        for (auto& w : sorted_word)
+        {
+            if (sorted_characters.find(w) != std::string::npos)
+            {
+                ++length;
+            }
+        }
+
+        // if all characters from the word is matched from sorted_characters, count it as Matched!
+        if (length == sorted_word.length())
+        {
+            count += length;
+        }
+    }
+    return count;
 }
 }  // namespace problem_statement

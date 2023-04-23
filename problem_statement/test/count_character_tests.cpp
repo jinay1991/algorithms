@@ -17,11 +17,12 @@ struct TestInputParam
     std::string characters;
 
     // Then
-    std::int32_t count;
+    std::size_t count;
 };
 
 using CountCharacter_WithInput = ::testing::TestWithParam<TestInputParam>;
 
+// clang-format off
 INSTANTIATE_TEST_SUITE_P(
     CountCharacter,
     CountCharacter_WithInput,
@@ -30,8 +31,10 @@ INSTANTIATE_TEST_SUITE_P(
         TestInputParam{   {"cat","bt","hat","tree"},          "atach",                6},
         TestInputParam{{"hello","world","leetcode"}, "welldonehoneyr",               10}
 ));
+// clang-format on
 
-TEST_P(CountCharacter_WithInput, CountCharacter_GivenTypicalInputs_ExpectCount) {
+TEST_P(CountCharacter_WithInput, CountCharacter_GivenTypicalInputs_ExpectCount)
+{
     // Given
     const auto param = GetParam();
 

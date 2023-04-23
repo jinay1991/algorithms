@@ -24,6 +24,7 @@ cc_library(
         "find_right_sibling.h",
         "image.h",
         "insert_sorted.h",
+        "find_kth_max_element.hpp",
         # "find_team_players.h",
         "asteroid_collision.h",
         # "invalid_transactions.h",

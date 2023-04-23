@@ -12,6 +12,7 @@ cc_test(
         "insert_sorted_tests.cpp",
         "count_character_tests.cpp",
         "is_prime_tests.cpp",
+        "find_kth_max_element_tests.cpp",
         # "find_team_players_tests.cpp",
         "asteroid_collision_tests.cpp",
         # "invalid_transactions_tests.cpp",
