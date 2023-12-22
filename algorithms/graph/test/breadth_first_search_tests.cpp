@@ -47,5 +47,10 @@ TEST(BreadthFirstSearch, SearchShortestPath_GivenTypicalStartEndLocations_Expect
                                        GridLocation{7_m, 5_m},
                                        end));
 }
+
+
+TEST(BreadthFirstSearch, SearchIslands_GivenTypicalGridMap_ExpectNumberOfIslands) {
+    
+}
 }  // namespace
 }  // namespace graph
