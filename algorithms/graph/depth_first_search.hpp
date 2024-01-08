@@ -1,28 +1,19 @@
 ///
 /// @file
-/// @copyright Copyright (C) 2021. MIT License.
+/// @copyright Copyright (C) 2024. MIT License.
 ///
-#ifndef ALGORITHMS_GRAPH_BREADTH_FIRST_SEARCH_H
-#define ALGORITHMS_GRAPH_BREADTH_FIRST_SEARCH_H
+#ifndef ALGORITHMS_GRAPH_DEPTH_FIRST_SEARCH_HPP
+#define ALGORITHMS_GRAPH_DEPTH_FIRST_SEARCH_HPP
 
 #include <algorithm>
-#include <queue>
-#include <type_traits>
+#include <stack>
 #include <unordered_map>
 #include <vector>
 
 namespace graph
 {
-
-///
-/// @class BreadthFirstSearch
-/// @brief Provide BFS (Breadth First Search) based shortest path search functionality for given Graph
-///
-/// @tparam Graph [in] Graph Type to look in for finding shortest path using BFS
-/// @tparam Location [in] Location Type for each node/cell in Graph represented in cartesian coordinate systems.
-///
 template <typename Graph, typename Location>
-class BreadthFirstSearch
+class DepthFirstSearch
 {
   public:
     ///
@@ -30,12 +21,7 @@ class BreadthFirstSearch
     ///
     using ShortestPath = std::vector<Location>;
 
-    ///
-    /// @brief Constructor for BreadthFirstSearch
-    ///
-    /// @param graph [in] Instance to the Graph/Grid
-    ///
-    constexpr explicit BreadthFirstSearch(const Graph& graph) : graph_{graph}, visited_{}, shortest_path_{}
+    constexpr explicit DepthFirstSearch(const Graph& graph) : graph_{graph}, visited_{}, shortest_path_{}
     {
         static_assert(std::is_pod<Location>::value, "Location must be plain type.");
     }
@@ -46,7 +32,7 @@ class BreadthFirstSearch
     /// @param start [in] Start Location
     /// @param end [in] End Location
     ///
-    constexpr void SearchShortestPath(const Location& start, const Location& end)
+    void SearchShortestPath(const Location& start, const Location& end) noexcept
     {
         DetermineShortestPath(start, end);
         ReconstructShortestPath(start, end);
@@ -57,7 +43,7 @@ class BreadthFirstSearch
     ///
     /// @return shortest path (list of Locations)
     ///
-    constexpr const ShortestPath& GetShortestPath() const { return shortest_path_; }
+    constexpr const ShortestPath& GetShortestPath() const noexcept { return shortest_path_; }
 
   private:
     ///
@@ -68,15 +54,15 @@ class BreadthFirstSearch
     ///
     constexpr void DetermineShortestPath(const Location& start, const Location& end)
     {
-        std::queue<Location> queue;
-        queue.push(start);
+        std::stack<Location> stack;
+        stack.push(start);
 
         visited_[start] = start;
 
-        while (!queue.empty())
+        while (!stack.empty())
         {
-            Location current = queue.front();
-            queue.pop();
+            Location current = stack.top();
+            stack.pop();
 
             if (current == end)
             {
@@ -87,7 +73,7 @@ class BreadthFirstSearch
             {
                 if (visited_.find(next) == visited_.end())
                 {
-                    queue.push(next);
+                    stack.push(next);
                     visited_[next] = current;
                 }
             }
@@ -130,6 +116,6 @@ class BreadthFirstSearch
     ///
     ShortestPath shortest_path_;
 };
-
 }  // namespace graph
-#endif  /// ALGORITHMS_GRAPH_BREADTH_FIRST_SEARCH_H
+
+#endif  /// ALGORITHMS_GRAPH_DEPTH_FIRST_SEARCH_HPP

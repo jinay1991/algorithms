@@ -28,50 +28,84 @@
 
 #include "problem_statement/islands.hpp"
 
+#include <cstdint>
+#include <queue>
+#include <vector>
+
 namespace problem_statement
 {
+
 struct Location
 {
-    std::size_t x;
-    std::size_t y;
+    std::int32_t x;
+    std::int32_t y;
 };
 
-int GetIslandFromGraph(const std::vector<std::vector<std::int32_t>>& graph,
-                       const std::int32_t landLegend,
-                       const std::int32_t waterLegend)
+bool IsInvalidLocation(const std::vector<std::vector<std::int32_t>>& graph, const Location& next)
 {
-    const std::size_t length{graph.size()};
-    const std::size_t breadth{graph.at(0UL).size()};
+    return ((next.x < 0) || (next.x >= graph.size()) || (next.y < 0) || (next.y >= graph[0UL].size()));
+}
 
-    std::queue<Location> queue;
-    Location start{0UL, 0UL};
-    queue.push(start);
+bool IsVisitedLocation(const std::vector<std::vector<std::int32_t>>& graph,
+                       const Location& location,
+                       const std::int32_t landLegend)
+{
+    return (graph[location.x][location.y] != landLegend);
+}
+
+// Time Complexity: O(length * breadth)
+void BreadthFirstSearch(const std::vector<std::vector<std::int32_t>>& graph,
+                        const Location& start,
+                        const std::int32_t legend)
+{
+    std::vector<Location> visited{start};
+    std::queue<Location> queue{start};
 
     while (!queue.empty())
     {
-        Location current{queue.front()};
+        const Location current{queue.front()};
         queue.pop();
 
-        if (graph.at(current.x).at(current.y) == waterLegend)
-        {
-            break;
-        }
+        visited.push_back(current);
+    }
+}
+// Time Complexity: O(length * breadth)
+void DepthFirstSearch(std::vector<std::vector<std::int32_t>>& grid, int idx, int idy)
+{
+    if (idx < 0 || idx >= grid.size() || idy < 0 || idy >= grid[0UL].size())
+        return;
+    if (grid[idx][idy] != 1)
+        return;
 
-        static constexpr std::vector<Location> directions{Location{-1, -1},
-                                                          Location{0, -1},
-                                                          Location{1, -1},
-                                                          Location{-1, 0},
-                                                          Location{1, 0},
-                                                          Location{-1, 1},
-                                                          Location{0, 1},
-                                                          Location{1, 1}};
-        for (auto& dir : directions)
+    grid[idx][idy] = 2;
+    DepthFirstSearch(grid, idx + 1, idy);
+    DepthFirstSearch(grid, idx - 1, idy);
+    DepthFirstSearch(grid, idx, idy + 1);
+    DepthFirstSearch(grid, idx, idy - 1);
+}
+
+std::int32_t GetNumberOfIslands(std::vector<std::vector<std::int32_t>>& graph, const std::int32_t landLegend)
+{
+    std::int32_t number_of_islands{0};
+
+    const std::size_t length{graph.size()};
+    const std::size_t breadth{graph.at(0UL).size()};
+
+    for (std::size_t l{0UL}; l < length; ++l)
+    {
+        for (std::size_t b{0UL}; b < breadth; ++b)
         {
-            const Location next{current.x + dir.x, current.y + dir.y};
-            if (next.x > )
+            if (graph[l][b] == landLegend)
             {
+                const Location current{l, b};
+                BreadthFirstSearch(graph, current, landLegend);
+
+                // DepthFirstSearch(graph, l, b);
+                ++number_of_islands;
             }
         }
     }
+
+    return number_of_islands;
 }
 }  // namespace problem_statement

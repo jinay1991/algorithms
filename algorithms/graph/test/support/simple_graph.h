@@ -20,7 +20,7 @@ class SimpleGraph
 
     void AddEdge(const T& node, const std::vector<T>& edge) { edges_[node] = edge; }
 
-    std::vector<T> GetNeighbors(const T& id) const { return edges_[id]; }
+    std::vector<T> GetNeighbours(const T& id) const { return edges_[id]; }
 
     double GetCost(const T& from, const T& to) const { return std::numeric_limits<T>::min(); }
 

@@ -6,6 +6,7 @@ cc_library(
         # "astar.h",
         # "breadth_first_search.h",
         # "dijkstra.h",
+        "depth_first_search.hpp",
         "graph.h",
     ],
     visibility = ["//visibility:public"],

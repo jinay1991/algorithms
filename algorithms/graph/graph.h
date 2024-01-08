@@ -45,12 +45,12 @@ class Graph
                 break;
             }
 
-            for (const auto& neighbor : GetNeighbors(current))
+            for (const auto& neighbour : GetNeighbours(current))
             {
-                if (!visited[neighbor])
+                if (!visited[neighbour])
                 {
-                    visited[neighbor] = true;
-                    queue.push(neighbor);
+                    visited[neighbour] = true;
+                    queue.push(neighbour);
                 }
             }
         }
@@ -58,7 +58,7 @@ class Graph
     }
 
   private:
-    constexpr const Path& GetNeighbors(const Node& current) const { return nodes_.at(current); }
+    constexpr const Path& GetNeighbours(const Node& current) const { return nodes_.at(current); }
 
     std::array<Path, kMaxNumberOfNodes> nodes_;
 };

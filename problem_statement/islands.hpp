@@ -33,7 +33,8 @@
 
 namespace problem_statement
 {
-int GetIslandFromGraph(const std::vector<std::vector<std::int32_t>>& graph) {}
+
+std::int32_t GetNumberOfIslands(std::vector<std::vector<std::int32_t>>& graph, const std::int32_t landLegend = 1);
 
 }  // namespace problem_statement
 

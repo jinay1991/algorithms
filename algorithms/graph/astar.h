@@ -110,7 +110,7 @@ class AStar
                 break;
             }
 
-            for (const auto& next : graph_.GetNeighbors(current))
+            for (const auto& next : graph_.GetNeighbours(current))
             {
                 const Cost current_cost = cost_so_far_[current] + graph_.GetCost(current, next);
                 if ((cost_so_far_.find(next) == cost_so_far_.end()) || (current_cost < cost_so_far_[next]))
@@ -146,7 +146,7 @@ class AStar
 
     ///
     /// @brief Instance of Graph/Grid.
-    /// @warning Graph must have method GetNeighbors
+    /// @warning Graph must have method GetNeighbours
     ///
     const Graph& graph_;
 

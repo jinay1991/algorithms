@@ -16,7 +16,7 @@ SquareGrid::SquareGrid(const units::length::meter_t width, const units::length::
       blocks_{},
       directions_{GridLocation{1_m, 0_m}, GridLocation{-1_m, 0_m}, GridLocation{0_m, -1_m}, GridLocation{0_m, 1_m}}
 {
-    static_assert(std::tuple_size<Directions>::value == 4U, "Neighboring directions other than 4 is not supported.");
+    static_assert(std::tuple_size<Directions>::value == 4U, "Neighbouring directions other than 4 is not supported.");
 }
 
 void SquareGrid::AddBlock(const GridLocation& start, const GridLocation& end)
@@ -30,26 +30,26 @@ void SquareGrid::AddBlock(const GridLocation& start, const GridLocation& end)
     }
 }
 
-SquareGrid::Neighbors SquareGrid::GetNeighbors(GridLocation id) const
+SquareGrid::Neighbours SquareGrid::GetNeighbours(GridLocation id) const
 {
-    Neighbors neighbors;
+    Neighbours neighbours;
 
     for (auto& dir : directions_)
     {
         const GridLocation next{id.x + dir.x, id.y + dir.y};
         if (IsInside(next) && (!IsBlocked(next)))
         {
-            neighbors.push_back(next);
+            neighbours.push_back(next);
         }
     }
 
     if ((id.x.to<std::int32_t>() + id.y.to<std::int32_t>()) % 2 == 0)
     {
         // see "Ugly paths" section for an explanation:
-        std::reverse(neighbors.begin(), neighbors.end());
+        std::reverse(neighbours.begin(), neighbours.end());
     }
 
-    return neighbors;
+    return neighbours;
 }
 
 units::length::meter_t SquareGrid::GetHeight() const

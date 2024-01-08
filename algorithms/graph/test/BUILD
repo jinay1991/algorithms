@@ -7,10 +7,11 @@ cc_test(
         # "breadth_first_search_tests.cpp",
         # "dijkstra_tests.cpp",
         "graph_tests.cpp",
+        "depth_first_search_tests.cpp",
     ],
     deps = [
         "//algorithms/graph",
-        # "//algorithms/graph/test/support",
+        "//algorithms/graph/test/support",
         "@googletest//:gtest_main",
     ],
 )

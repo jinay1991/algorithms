@@ -22,14 +22,14 @@ class SquareGrid
     static constexpr std::size_t kMaxDirection = 4U;
 
     using Directions = std::array<GridLocation, kMaxDirection>;
-    using Neighbors = std::vector<GridLocation>;
+    using Neighbours = std::vector<GridLocation>;
     using Blocks = std::unordered_set<GridLocation>;
 
     explicit SquareGrid(const units::length::meter_t width, const units::length::meter_t height);
 
     void AddBlock(const GridLocation& start, const GridLocation& end);
 
-    Neighbors GetNeighbors(GridLocation id) const;
+    Neighbours GetNeighbours(GridLocation id) const;
 
     units::length::meter_t GetHeight() const;
     units::length::meter_t GetWidth() const;

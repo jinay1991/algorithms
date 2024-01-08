@@ -2,6 +2,7 @@
 *.d
 *.vscode
 *.DS_Store
+MODULE.bazel*
 
 # Compiled Object files
 *.slo
