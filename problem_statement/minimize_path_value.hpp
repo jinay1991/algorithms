@@ -1,6 +1,6 @@
 #include <vector>
 
-namespace library
+namespace problem_statement
 {
 int getMinimumStress(const int N,
                      const std::vector<int>& from,
@@ -9,4 +9,4 @@ int getMinimumStress(const int N,
                      int source,
                      int destination);
 
-}  // namespace library
+}  // namespace problem_statement
